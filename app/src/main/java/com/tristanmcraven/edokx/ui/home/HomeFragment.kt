@@ -44,12 +44,12 @@ class HomeFragment : Fragment() {
         scrollViewContainer = root.findViewById(R.id.scrollViewContainer)
 
         CoroutineScope(Dispatchers.IO).launch {
-            val restaurants = ApiClient.IRestaurant.get()
+            val restaurants = ApiClient.IRestaurant.get()!!
 
             restaurants.forEach { rest ->
                 val restaurantView = layoutInflater.inflate(R.layout.item_restaurant, scrollViewContainer, false)
 
-                val restCategories = ApiClient.IRestaurant.getCategoriesById(rest.id)
+                val restCategories = ApiClient.IRestaurant.getCategoriesById(rest.id)!!
 
                 val imgRestaurant = restaurantView.findViewById<ImageView>(R.id.imgRestaurant)
                 val textViewRestName = restaurantView.findViewById<TextView>(R.id.textViewRestName)
@@ -63,7 +63,7 @@ class HomeFragment : Fragment() {
                 restCategories.forEach { cat ->
                     textViewCategories.append("$cat, ")
                 }
-                
+                textViewCategories.text = textViewCategories.text.toString().removeSuffix(", ")
             }
         }
 

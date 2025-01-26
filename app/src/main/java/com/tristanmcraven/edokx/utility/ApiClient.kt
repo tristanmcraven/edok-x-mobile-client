@@ -16,17 +16,10 @@ object ApiClient {
 
     fun <T> sendRequest(url: String, httpMethod: String, responseType: Type, body: Any? = null): T?
     {
-//        return try
-//        {
-            val request = buildRequest(url, httpMethod, body)
-            val response = httpClient.newCall(request).execute()
-            if (!response.isSuccessful) return null
-            return response.body?.string()?.let { gson.fromJson(it, responseType) }
-//        }
-//        catch (e: Exception)
-//        {
-//            null
-//        }
+        val request = buildRequest(url, httpMethod, body)
+        val response = httpClient.newCall(request).execute()
+        if (!response.isSuccessful) return null
+        return response.body?.string()?.let { gson.fromJson(it, responseType) }
     }
 
     fun sendRequest(url: String, httpMethod: String, body: Any? = null): Boolean?
