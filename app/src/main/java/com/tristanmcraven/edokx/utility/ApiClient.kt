@@ -3,6 +3,7 @@ package com.tristanmcraven.edok.utility
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.tristanmcraven.edok.model.Restaurant
+import com.tristanmcraven.edok.model.RestaurantCategory
 import com.tristanmcraven.edok.model.User
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -72,6 +73,12 @@ object ApiClient {
         {
             val type = object : TypeToken<List<Restaurant>>() {}.type
             return sendRequest("restaurant", "GET", type, body = null)
+        }
+
+        fun getCategoriesById(id: UInt): List<RestaurantCategory>?
+        {
+            val type = object: TypeToken<List<RestaurantCategory>>() {}.type
+            return sendRequest("restaurant/$id/categories", "GET", type, body = null)
         }
     }
 }
