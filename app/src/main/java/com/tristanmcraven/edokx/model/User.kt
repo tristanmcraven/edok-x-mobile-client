@@ -8,6 +8,6 @@ data class User(
     val email: String?,
     val login: String,
     val password: String,
-    val pfp: ByteArray,
-    val lastAddress: String
+    val pfp: ByteArray?,
+    val lastAddress: String?
 )

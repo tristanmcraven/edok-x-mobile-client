@@ -47,7 +47,7 @@ class AuthActivity : AppCompatActivity() {
                 withContext(Dispatchers.Main)
                 {
                     if (user == null)
-                        Toast.makeText(this@AuthActivity, "Неправильное имя пользователя или пароль!", Toast.LENGTH_SHORT)
+                        Toast.makeText(this@AuthActivity, "Неправильное имя пользователя или пароль!", Toast.LENGTH_SHORT).show()
                     else {
                         val intent = Intent(this@AuthActivity, MainActivity::class.java)
                         startActivity(intent)

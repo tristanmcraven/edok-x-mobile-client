@@ -9,6 +9,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.tristanmcraven.edok.model.Restaurant
 import com.tristanmcraven.edok.model.RestaurantCategory
 import com.tristanmcraven.edok.model.User
+import com.tristanmcraven.edokx.utility.UIntJsonAdapter
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -18,7 +19,7 @@ import java.lang.reflect.Type
 object ApiClient {
     private const val API_PATH = "http://10.0.2.2:5224/api/"
     private val gson = Gson()
-    private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory()).build()
+    private val moshi = Moshi.Builder().add(UIntJsonAdapter()).add(KotlinJsonAdapterFactory()).build()
     private val httpClient = OkHttpClient()
 
     fun <T> sendRequest(url: String, httpMethod: String, responseType: Type, body: Any? = null): T?

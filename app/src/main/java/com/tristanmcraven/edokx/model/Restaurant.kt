@@ -16,6 +16,6 @@ data class Restaurant(
     val pending: Boolean,
     val rejectReason: String?,
     val disabled: Boolean,
-    val disableReason: String,
-    val image: ByteArray
+    val disableReason: String?,
+    val image: String
 )

@@ -3,6 +3,7 @@ package com.tristanmcraven.edokx.ui.home
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,8 +56,9 @@ class HomeFragment : Fragment() {
                 val textViewRestName = restaurantView.findViewById<TextView>(R.id.textViewRestName)
                 val textViewDeliverTime = restaurantView.findViewById<TextView>(R.id.textViewDeliverTime)
                 val textViewCategories = restaurantView.findViewById<TextView>(R.id.textViewCategories)
+                val rawImage = Base64.decode(rest.image, Base64.DEFAULT)
 
-                imgRestaurant.setImageBitmap(BitmapFactory.decodeByteArray(rest.image, 0, rest.image.size))
+                imgRestaurant.setImageBitmap(BitmapFactory.decodeByteArray(rawImage, 0, rawImage.size))
                 textViewRestName.text = rest.name
                 textViewDeliverTime.text = "20-30 мин"
                 textViewCategories.text = ""
