@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.okhttp)
     implementation(libs.androidx.activity)
+    implementation(libs.moshi)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -15,6 +15,7 @@ navigationUiKtx = "2.8.5"
 okhttp = "4.12.0"
 gson = "2.11.0"
 activity = "1.10.0"
+moshi = "1.15.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -31,6 +32,7 @@ androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref="okhttp"}
 gson = {group = "com.google.code.gson", name = "gson", version.ref="gson"}
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+moshi = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
