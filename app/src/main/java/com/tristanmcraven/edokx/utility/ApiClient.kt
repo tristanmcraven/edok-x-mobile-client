@@ -6,6 +6,9 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.adapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.tristanmcraven.edok.model.Category
+import com.tristanmcraven.edok.model.Food
+import com.tristanmcraven.edok.model.FoodCategory
 import com.tristanmcraven.edok.model.Restaurant
 import com.tristanmcraven.edok.model.RestaurantCategory
 import com.tristanmcraven.edok.model.User
@@ -88,6 +91,28 @@ object ApiClient {
         {
             val type = object: TypeToken<List<RestaurantCategory>>() {}.type
             return sendRequest("restaurant/$id/categories", "GET", type, body = null)
+        }
+
+        fun getFood(id: UInt): List<Food>?
+        {
+            val type = object: TypeToken<List<Food>>() {}.type
+            return sendRequest("restaurant/$id/food", "GET", type)
+        }
+    }
+
+    object ICategory
+    {
+        fun getCategoryById(id: UInt): Category?
+        {
+            return sendRequest("category/$id", "GET", Category::class.java)
+        }
+    }
+
+    object IFoodCategory
+    {
+        fun getById(id: UInt): FoodCategory?
+        {
+            return sendRequest("foodcategory/$id", "GET", FoodCategory::class.java)
         }
     }
 }

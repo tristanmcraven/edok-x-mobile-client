@@ -15,4 +15,5 @@
     <string name="log_in">Войти</string>
     <string name="sign_up">Регистрация</string>
     <string name="continue_without_signing_up">Продолжить без регистрации</string>
+    <string name="order">Заказ</string>
 </resources>
