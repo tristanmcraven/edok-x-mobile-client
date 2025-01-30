@@ -28,31 +28,34 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <ScrollView
+    <HorizontalScrollView
         android:id="@+id/scrollViewCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
 
         app:layout_constraintTop_toBottomOf="@id/textViewRestName"
         app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
+        <com.google.android.material.chip.ChipGroup
             android:id="@+id/containerCategories"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:singleSelection="true"
             android:orientation="horizontal" />
-    </ScrollView>
+    </HorizontalScrollView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFood"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scrollViewCategories"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scrollViewCategories"
+        app:layout_constraintBottom_toTopOf="@id/cardViewBottom"/>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
@@ -61,7 +64,7 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/buttonOrder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/order" />

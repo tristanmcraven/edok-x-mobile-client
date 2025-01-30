@@ -21,7 +21,6 @@ import java.lang.reflect.Type
 
 object ApiClient {
     private const val API_PATH = "http://10.0.2.2:5224/api/"
-    private val gson = Gson()
     private val moshi = Moshi.Builder().add(UIntJsonAdapter()).add(KotlinJsonAdapterFactory()).build()
     private val httpClient = OkHttpClient()
 

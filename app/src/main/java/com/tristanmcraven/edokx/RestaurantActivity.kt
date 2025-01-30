@@ -1,16 +1,22 @@
 package com.tristanmcraven.edokx
 
+import android.content.res.ColorStateList
 import android.os.Bundle
-import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.children
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.tristanmcraven.edok.model.Food
+import com.tristanmcraven.edok.model.FoodCategory
 import com.tristanmcraven.edok.model.Restaurant
 import com.tristanmcraven.edok.utility.ApiClient
+import com.tristanmcraven.edokx.adapter.FoodAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +26,11 @@ import kotlinx.coroutines.withContext
 class RestaurantActivity : AppCompatActivity() {
 
     private lateinit var textViewRestName: TextView
-    private lateinit var containerCategories: LinearLayout
+    private lateinit var containerCategories: ChipGroup
+    private lateinit var recyclerViewFood: RecyclerView
+
+    private lateinit var foodList: List<Food>
+    private lateinit var categories: List<FoodCategory?>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,42 +44,89 @@ class RestaurantActivity : AppCompatActivity() {
 
         textViewRestName = findViewById(R.id.textViewRestName)
         containerCategories = findViewById(R.id.containerCategories)
+        recyclerViewFood = findViewById(R.id.recyclerViewFood)
+        recyclerViewFood.layoutManager = GridLayoutManager(this, 2)
+        containerCategories.isSelectionRequired = true
+
+
 
         val rest = intent.getParcelableExtra<Restaurant>("restaurant")!! //pass class as a func argument for newer APIS (33+)
         textViewRestName.text = rest.name
 
         CoroutineScope(Dispatchers.IO).launch {
-            val foods = ApiClient.IRestaurant.getFood(rest.id)!!
-            val categories = foods.map { food ->
+            foodList = ApiClient.IRestaurant.getFood(rest.id)!!
+            categories = foodList.map { food ->
                 ApiClient.IFoodCategory.getById(food.foodCategoryId)
             }.distinctBy { it!!.id }
 
             withContext(Dispatchers.Main) {
-                // Add a default "Full Menu" button
-                addCategoryButton("Full Menu")
+                addCategoryChip("Всё меню", 0U)
 
-                // Add buttons for each unique category
                 categories.forEach { category ->
-                    addCategoryButton(category!!.name)
+                    addCategoryChip(category!!.name, category.id)
+                }
+                val zxc = containerCategories.children.first() as Chip
+                zxc.performClick()
+            }
+        }
+
+    }
+
+
+
+    private fun addCategoryChip(categoryName: String, categoryId: UInt) {
+
+        val backgroundColorStateList = ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_checked), // When chip is selected
+                intArrayOf(-android.R.attr.state_checked) // When chip is not selected
+            ),
+            intArrayOf(
+                getColor(R.color.teal_700), // Selected background color
+                getColor(R.color.teal_200)  // Default background color
+            )
+        )
+
+        // Create the ColorStateList for stroke colors
+        val strokeColorStateList = ColorStateList(
+            arrayOf(
+                intArrayOf(android.R.attr.state_checked), // When chip is selected
+                intArrayOf(-android.R.attr.state_checked) // When chip is not selected
+            ),
+            intArrayOf(
+                getColor(R.color.purple_500), // Selected stroke color
+                getColor(R.color.purple_200)         // Default stroke color
+            )
+        )
+
+        val chip = Chip(this).apply {
+            text = categoryName
+            isClickable = true
+            isCheckable = true
+            isCheckedIconVisible = false
+            chipBackgroundColor = backgroundColorStateList
+            chipStrokeColor = strokeColorStateList
+            chipStrokeWidth = 1f
+            setTag(R.id.category_id, categoryId)
+            setOnClickListener {
+                if (this.text.toString() == "Всё меню") {
+                    updateRecyclerViewWithFoodData(foodList)
+                }
+                else {
+                    val tag = getTag(R.id.category_id)
+                    val newFoodList = foodList.filter { it -> it.foodCategoryId == tag}
+                    updateRecyclerViewWithFoodData(newFoodList)
                 }
             }
         }
+
+        containerCategories.addView(chip)
+
     }
 
-    private fun addCategoryButton(categoryName: String) {
-        val button = Button(this).apply {
-            text = categoryName
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(8, 0, 8, 0)
-            }
-        }
-        button.setOnClickListener {
-            // Handle category button clicks here
-            Toast.makeText(this, "Clicked on $categoryName", Toast.LENGTH_SHORT).show()
-        }
-        containerCategories.addView(button)
+    private fun updateRecyclerViewWithFoodData(newFoodList: List<Food>) {
+        recyclerViewFood.adapter = FoodAdapter(newFoodList.toMutableList())
+        val adapter = recyclerViewFood.adapter as FoodAdapter
+        adapter.setFoodList(newFoodList)
     }
 }
