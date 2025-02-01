@@ -1,17 +1,21 @@
 package com.tristanmcraven.edok.utility
 
+import android.service.voice.VoiceInteractionSession.ActivityId
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import com.squareup.moshi.adapter
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import com.tristanmcraven.edok.model.Cart
+import com.tristanmcraven.edok.model.CartItem
 import com.tristanmcraven.edok.model.Category
 import com.tristanmcraven.edok.model.Food
 import com.tristanmcraven.edok.model.FoodCategory
 import com.tristanmcraven.edok.model.Restaurant
 import com.tristanmcraven.edok.model.RestaurantCategory
 import com.tristanmcraven.edok.model.User
+import com.tristanmcraven.edokx.utility.GlobalVM
 import com.tristanmcraven.edokx.utility.UIntJsonAdapter
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaType
@@ -24,7 +28,7 @@ object ApiClient {
     private val moshi = Moshi.Builder().add(UIntJsonAdapter()).add(KotlinJsonAdapterFactory()).build()
     private val httpClient = OkHttpClient()
 
-    fun <T> sendRequest(url: String, httpMethod: String, responseType: Type, body: Any? = null): T?
+    private fun <T> sendRequest(url: String, httpMethod: String, responseType: Type, body: Any? = null): T?
     {
         val request = buildRequest(url, httpMethod, body)
         val response = httpClient.newCall(request).execute()
@@ -36,7 +40,7 @@ object ApiClient {
         }
     }
 
-    fun sendRequest(url: String, httpMethod: String, body: Any? = null): Boolean?
+    private fun sendRequest(url: String, httpMethod: String, body: Any? = null): Boolean?
     {
         return try {
             val request = buildRequest(url, httpMethod, body)
@@ -76,6 +80,17 @@ object ApiClient {
             )
             return sendRequest("user/login", "POST", User::class.java, dto)
         }
+
+        fun getCarts(userId: UInt): List<Cart>?
+        {
+            val type = object: TypeToken<List<Cart>>() {}.type
+            return sendRequest("user/$userId/carts", "GET", type)
+        }
+
+        fun getActiveCartByRestId(userId: UInt, restId: UInt): Cart?
+        {
+            return sendRequest("user/$userId/activecart?restid=$restId", "POST", Cart::class.java)
+        }
     }
 
     object IRestaurant
@@ -112,6 +127,33 @@ object ApiClient {
         fun getById(id: UInt): FoodCategory?
         {
             return sendRequest("foodcategory/$id", "GET", FoodCategory::class.java)
+        }
+    }
+
+    object ICart
+    {
+        fun addItem(cartId: UInt, foodId: UInt): Boolean?
+        {
+            return sendRequest("cart/$cartId/additem?foodId=$foodId", "POST", "")
+        }
+
+        fun getItemsByCartId(cartId: UInt): List<CartItem>?
+        {
+            val type = object: TypeToken<List<CartItem>>() {}.type
+            return sendRequest("cart/$cartId/items", "GET", type)
+        }
+    }
+
+    object ICartItem
+    {
+        fun addItem(cartId: UInt, foodId: UInt): Boolean?
+        {
+//            val result = sendRequest("cart/$cartId/additem?foodId=$foodId", "POST")
+//            if (result!!) {
+//                GlobalVM.carts = IUser.getCarts(GlobalVM.currentUser!!.id)
+//            }
+//            return result
+            return sendRequest("cart/$cartId/additem?foodId=$foodId", "POST", "")
         }
     }
 }

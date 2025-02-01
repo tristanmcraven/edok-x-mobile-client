@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.tristanmcraven.edok.utility.ApiClient
+import com.tristanmcraven.edokx.utility.GlobalVM
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,14 +45,22 @@ class AuthActivity : AppCompatActivity() {
             val pass = editTextPassword.text.toString()
             CoroutineScope(Dispatchers.IO).launch {
                 val user = ApiClient.IUser.login(login, pass)
-                withContext(Dispatchers.Main)
-                {
-                    if (user == null)
+
+                if (user == null) {
+                    withContext(Dispatchers.Main) {
                         Toast.makeText(this@AuthActivity, "Неправильное имя пользователя или пароль!", Toast.LENGTH_SHORT).show()
-                    else {
-                        val intent = Intent(this@AuthActivity, MainActivity::class.java)
-                        startActivity(intent)
                     }
+                    return@launch
+                }
+
+                val carts = ApiClient.IUser.getCarts(user.id)
+                withContext(Dispatchers.Main) {
+                    GlobalVM.currentUser = user
+                    GlobalVM.carts = carts
+
+                    val intent = Intent(this@AuthActivity, MainActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }
             }
         }

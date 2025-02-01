@@ -2,6 +2,7 @@ package com.tristanmcraven.edokx
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -12,25 +13,32 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.tristanmcraven.edok.model.Cart
+import com.tristanmcraven.edok.model.CartItem
 import com.tristanmcraven.edok.model.Food
 import com.tristanmcraven.edok.model.FoodCategory
 import com.tristanmcraven.edok.model.Restaurant
 import com.tristanmcraven.edok.utility.ApiClient
 import com.tristanmcraven.edokx.adapter.FoodAdapter
+import com.tristanmcraven.edokx.utility.GlobalVM
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class RestaurantActivity : AppCompatActivity() {
+class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
 
     private lateinit var textViewRestName: TextView
     private lateinit var containerCategories: ChipGroup
     private lateinit var recyclerViewFood: RecyclerView
+    private lateinit var buttonOrder: Button
 
     private lateinit var foodList: List<Food>
     private lateinit var categories: List<FoodCategory?>
+
+    private var cart: Cart? = null
+    private var cartItems: List<CartItem>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,11 +57,16 @@ class RestaurantActivity : AppCompatActivity() {
         containerCategories.isSelectionRequired = true
 
 
-
-        val rest = intent.getParcelableExtra<Restaurant>("restaurant")!! //pass class as a func argument for newer APIS (33+)
+        val rest = intent.getParcelableExtra<Restaurant>("restaurant")!! //pass class as a func argument for newer APIs (33+)
         textViewRestName.text = rest.name
 
         CoroutineScope(Dispatchers.IO).launch {
+            cart = GlobalVM.carts!!.filter { it.restaurantId == rest.id }.firstOrNull()
+            if (cart == null) {
+                cart = ApiClient.IUser.getActiveCartByRestId(GlobalVM.currentUser!!.id, rest.id)
+            }
+            cartItems = ApiClient.ICart.getItemsByCartId(cart!!.id)
+
             foodList = ApiClient.IRestaurant.getFood(rest.id)!!
             categories = foodList.map { food ->
                 ApiClient.IFoodCategory.getById(food.foodCategoryId)
@@ -70,6 +83,15 @@ class RestaurantActivity : AppCompatActivity() {
             }
         }
 
+    }
+
+    override fun onFoodAdded(food: Food) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val cart = GlobalVM.carts!!.first { it.restaurantId == food.restaurantId }
+            ApiClient.ICart.addItem(cart.id, food.id)
+
+            cartItems = ApiClient.ICart.getItemsByCartId(cart.id)
+        }
     }
 
 
@@ -125,8 +147,13 @@ class RestaurantActivity : AppCompatActivity() {
     }
 
     private fun updateRecyclerViewWithFoodData(newFoodList: List<Food>) {
-        recyclerViewFood.adapter = FoodAdapter(newFoodList.toMutableList())
+        recyclerViewFood.adapter = FoodAdapter(newFoodList.toMutableList(), this)
         val adapter = recyclerViewFood.adapter as FoodAdapter
         adapter.setFoodList(newFoodList)
     }
+
+}
+
+interface OnFoodAddedListener {
+    fun onFoodAdded(food: Food)
 }
