@@ -137,6 +137,11 @@ object ApiClient {
             return sendRequest("cart/$cartId/additem?foodId=$foodId", "POST", "")
         }
 
+        fun decreaseQuantity(cartId: UInt, foodId: UInt): Boolean?
+        {
+            return sendRequest("cart/$cartId/decreasequantity?foodId=$foodId", "POST", "")
+        }
+
         fun getItemsByCartId(cartId: UInt): List<CartItem>?
         {
             val type = object: TypeToken<List<CartItem>>() {}.type

@@ -1,14 +1,17 @@
 package com.tristanmcraven.edokx
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
@@ -40,6 +43,8 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
     private var cart: Cart? = null
     private var cartItems: List<CartItem>? = null
 
+    private lateinit var rest: Restaurant
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -50,14 +55,9 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
             insets
         }
 
-        textViewRestName = findViewById(R.id.textViewRestName)
-        containerCategories = findViewById(R.id.containerCategories)
-        recyclerViewFood = findViewById(R.id.recyclerViewFood)
-        recyclerViewFood.layoutManager = GridLayoutManager(this, 2)
-        containerCategories.isSelectionRequired = true
+        initUI()
 
-
-        val rest = intent.getParcelableExtra<Restaurant>("restaurant")!! //pass class as a func argument for newer APIs (33+)
+        rest = intent.getParcelableExtra<Restaurant>("restaurant")!! //pass class as a func argument for newer APIs (33+)
         textViewRestName.text = rest.name
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -94,7 +94,22 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
         }
     }
 
+    private fun initUI()
+    {
+        textViewRestName = findViewById(R.id.textViewRestName)
+        containerCategories = findViewById(R.id.containerCategories)
+        recyclerViewFood = findViewById(R.id.recyclerViewFood)
+        buttonOrder = findViewById(R.id.buttonOrder)
+        recyclerViewFood.layoutManager = GridLayoutManager(this, 2)
+        containerCategories.isSelectionRequired = true
 
+        buttonOrder.setOnClickListener {
+            val intent = Intent(this, CartActivity::class.java)
+            intent.putParcelableArrayListExtra("cartItems", ArrayList(cartItems))
+            intent.putExtra("rest", rest)
+            startActivity(intent)
+        }
+    }
 
     private fun addCategoryChip(categoryName: String, categoryId: UInt) {
 
