@@ -16,4 +16,6 @@
     <string name="sign_up">Регистрация</string>
     <string name="continue_without_signing_up">Продолжить без регистрации</string>
     <string name="order">Заказ</string>
+    <string name="next">Далее</string>
+    <string name="pay">Оплатить</string>
 </resources>

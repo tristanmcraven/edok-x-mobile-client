@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp">
 
     <ImageView
         android:id="@+id/imgFood"
@@ -16,13 +18,17 @@
 
     <TextView
         android:id="@+id/textViewFoodName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Food Name"
+        android:hyphenationFrequency="full"
+        android:breakStrategy="high_quality"
+        android:layout_marginRight="10dp"
 
         app:layout_constraintStart_toEndOf="@id/imgFood"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/textViewFoodPrice"/>
+        app:layout_constraintBottom_toTopOf="@id/textViewFoodPrice"
+        app:layout_constraintEnd_toStartOf="@id/cardViewFoodCount"/>
 
     <TextView
         android:id="@+id/textViewFoodPrice"
@@ -35,6 +41,7 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewFoodCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
@@ -80,5 +87,21 @@
                 app:layout_constraintTop_toTopOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
+
+<!--    <androidx.constraintlayout.widget.Guideline-->
+<!--        android:id="@+id/guideline"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintGuide_percent="0.90"/>-->
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

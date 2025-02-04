@@ -24,7 +24,7 @@ import java.lang.reflect.Type
 
 
 object ApiClient {
-    private const val API_PATH = "http://10.0.2.2:5224/api/"
+    private const val API_PATH = "http://192.168.1.100:5224/api/"
     private val moshi = Moshi.Builder().add(UIntJsonAdapter()).add(KotlinJsonAdapterFactory()).build()
     private val httpClient = OkHttpClient()
 
@@ -159,6 +159,14 @@ object ApiClient {
 //            }
 //            return result
             return sendRequest("cart/$cartId/additem?foodId=$foodId", "POST", "")
+        }
+    }
+
+    object IFood
+    {
+        fun getById(foodId: UInt): Food?
+        {
+            return sendRequest("food/$foodId", "GET", Food::class.java)
         }
     }
 }
