@@ -3,16 +3,32 @@ package com.tristanmcraven.edokx
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.tristanmcraven.edok.model.Cart
+import com.tristanmcraven.edok.model.CartItem
+import com.tristanmcraven.edok.model.Restaurant
+import com.tristanmcraven.edok.utility.ApiClient
+import com.tristanmcraven.edokx.utility.GlobalVM
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CheckoutActivity : AppCompatActivity() {
 
     private lateinit var buttonPay: Button
     private lateinit var textViewOrderTotal: TextView
+    private lateinit var editTextAddress: EditText
+
+    private lateinit var rest: Restaurant
+    private lateinit var cartItems: List<CartItem>
+    private var cartTotal: UInt = 0u
+    private lateinit var cart: Cart
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,19 +39,40 @@ class CheckoutActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        retrieveIntentData()
         initViews()
-
+        CoroutineScope(Dispatchers.IO).launch {
+            cartTotal = ApiClient.ICart.getTotal(GlobalVM.carts!!.first { it.restaurantId == rest.id }.id)!!
+            textViewOrderTotal.text = "${cartTotal + 178u} ₽"
+        }
     }
 
     fun initViews() {
         textViewOrderTotal = findViewById(R.id.textViewOrderTotal)
 
+        editTextAddress = findViewById(R.id.editTextAddress)
+
         buttonPay = findViewById(R.id.buttonPay)
         buttonPay.setOnClickListener {
-            val intent = Intent(this, OrderActivity::class.java)
-            startActivity(intent)
-            finish()
+            CoroutineScope(Dispatchers.IO).launch {
+                val result = ApiClient.IOrder.create(GlobalVM.currentUser!!.id, rest.id, cart.id, editTextAddress.text.toString(), cartTotal + 178u)!!
+                if (result) {
+                    withContext(Dispatchers.Main) {
+                        val intent = Intent(this@CheckoutActivity, OrderActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+                }
+            }
+
         }
+
+
+    }
+
+    fun retrieveIntentData() {
+        rest = intent.getParcelableExtra<Restaurant>("rest")!!
+        cartItems = intent.getParcelableArrayListExtra<CartItem>("cartItems")?.toList()!!
+        cart = GlobalVM.carts!!.first { it.restaurantId == rest.id }
     }
 }

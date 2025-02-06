@@ -12,6 +12,7 @@ import com.tristanmcraven.edok.model.CartItem
 import com.tristanmcraven.edok.model.Category
 import com.tristanmcraven.edok.model.Food
 import com.tristanmcraven.edok.model.FoodCategory
+import com.tristanmcraven.edok.model.Order
 import com.tristanmcraven.edok.model.Restaurant
 import com.tristanmcraven.edok.model.RestaurantCategory
 import com.tristanmcraven.edok.model.User
@@ -24,7 +25,7 @@ import java.lang.reflect.Type
 
 
 object ApiClient {
-    private const val API_PATH = "http://192.168.1.100:5224/api/"
+    private const val API_PATH = "http://10.0.2.2:5224/api/"
     private val moshi = Moshi.Builder().add(UIntJsonAdapter()).add(KotlinJsonAdapterFactory()).build()
     private val httpClient = OkHttpClient()
 
@@ -147,6 +148,10 @@ object ApiClient {
             val type = object: TypeToken<List<CartItem>>() {}.type
             return sendRequest("cart/$cartId/items", "GET", type)
         }
+
+        fun getTotal(cartId: UInt): UInt? {
+            return sendRequest("cart/$cartId/total", "GET", UInt::class.java)
+        }
     }
 
     object ICartItem
@@ -167,6 +172,21 @@ object ApiClient {
         fun getById(foodId: UInt): Food?
         {
             return sendRequest("food/$foodId", "GET", Food::class.java)
+        }
+    }
+
+    object IOrder
+    {
+        fun create(userId: UInt, restId: UInt, cartId: UInt, address: String, total: UInt): Boolean?
+        {
+            val dto = mapOf(
+                "UserId" to userId,
+                "RestId" to restId,
+                "CartId" to cartId,
+                "Address" to address,
+                "Total" to total
+            )
+            return sendRequest("order", "POST", dto)
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.tristanmcraven.edokx
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
@@ -42,6 +43,13 @@ class CartActivity : AppCompatActivity() {
     {
         buttonGoBack = findViewById(R.id.buttonGoBack)
         buttonNext = findViewById(R.id.buttonNext)
+        buttonNext.setOnClickListener {
+            val intent = Intent(this, CheckoutActivity::class.java)
+            intent.putExtra("rest", rest)
+            intent.putParcelableArrayListExtra("cartItems", ArrayList(cartItems))
+            startActivity(intent)
+        }
+
         textViewRestName = findViewById(R.id.textViewRestName)
         textViewRestName.text = rest.name
         recyclerViewCartItems = findViewById(R.id.recyclerViewCartItems)

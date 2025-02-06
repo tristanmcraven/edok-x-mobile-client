@@ -18,4 +18,13 @@
     <string name="order">Заказ</string>
     <string name="next">Далее</string>
     <string name="pay">Оплатить</string>
+    <string name="delivery">Доставка</string>
+    <string name="where">Куда</string>
+    <string name="entrance">Подъезд</string>
+    <string name="intercom">Домофон</string>
+    <string name="apartment">Кв./офис</string>
+    <string name="floor">Этаж</string>
+    <string name="comment">Комментарий к заказу</string>
+    <string name="receiver_phone">Телефон получателя</string>
+    <string name="total">Total</string>
 </resources>

@@ -10,88 +10,117 @@
     <LinearLayout
         android:id="@+id/linearLayoutTopBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <Button
             android:id="@+id/buttonGoBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minWidth="0dp"
-            android:layout_weight="0"
+            android:minWidth="50dp"
+            android:layout_weight="1"
             android:text="←" />
 
         <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
+            android:layout_weight="2"
+            android:text="@string/delivery"
+            android:textAlignment="center"/>
 
 
     </LinearLayout>
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/textViewWhere"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="@string/where"
+        android:textSize="40sp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutTopBar"/>
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/editTextAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="text"
+        android:text="г. Уфа, ул. Примерная, д.136"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewWhere"/>
+
+    <EditText
+        android:id="@+id/editTextEntrance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:text="Name" />
+        android:hint="@string/entrance"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextAddress"/>
 
     <EditText
-        android:id="@+id/editTextText2"
+        android:id="@+id/editTextIntercom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:text="Name" />
+        android:hint="@string/intercom"
+
+        app:layout_constraintStart_toEndOf="@id/editTextEntrance"
+        app:layout_constraintTop_toBottomOf="@id/editTextAddress"/>
 
     <EditText
-        android:id="@+id/editTextText3"
+        android:id="@+id/editTextApartment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:text="Name" />
+        android:hint="@string/apartment"
+
+        app:layout_constraintTop_toBottomOf="@id/editTextEntrance"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
-        android:id="@+id/editTextText4"
+        android:id="@+id/editTextFloor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:text="Name" />
+        android:hint="@string/floor"
+
+        app:layout_constraintTop_toBottomOf="@id/editTextIntercom"
+        app:layout_constraintStart_toEndOf="@id/editTextApartment"/>
 
     <EditText
-        android:id="@+id/editTextText5"
-        android:layout_width="wrap_content"
+        android:id="@+id/editTextComment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:text="Name" />
+        android:hint="@string/comment"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextApartment"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <EditText
-        android:id="@+id/editTextText6"
-        android:layout_width="wrap_content"
+        android:id="@+id/editTextPhone"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="text"
-        android:text="Name" />
+        android:hint="@string/receiver_phone"
 
-    <EditText
-        android:id="@+id/editTextText7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Name" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editTextComment"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewBottom"
@@ -110,12 +139,13 @@
                 android:id="@+id/textViewOrderTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total"
+                android:text="@string/total"
                 android:textSize="20sp"
-
+                android:layout_marginStart="20dp"
 
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
             <Button
                 android:id="@+id/buttonPay"
