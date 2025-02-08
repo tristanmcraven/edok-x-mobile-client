@@ -7,33 +7,40 @@
     android:layout_height="match_parent"
     tools:context=".RestaurantActivity">
 
-    <Button
-        android:id="@+id/goBackButton"
-        android:layout_width="40dp"
+    <LinearLayout
+        android:id="@+id/linearLayoutTopBar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
-        android:padding="0dp"
-        android:text="←"
+        android:orientation="horizontal">
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        <Button
+            android:id="@+id/goBackButton"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:padding="0dp"
+            android:text="←"
+            android:textSize="30sp"
+            android:layout_weight="0"
+            android:minWidth="40dp"
 
-    <TextView
-        android:id="@+id/textViewRestName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
+            />
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:id="@+id/textViewRestName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:layout_weight="1"
+
+            />
+    </LinearLayout>
 
     <HorizontalScrollView
         android:id="@+id/scrollViewCategories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toBottomOf="@id/textViewRestName"
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutTopBar"
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.chip.ChipGroup
