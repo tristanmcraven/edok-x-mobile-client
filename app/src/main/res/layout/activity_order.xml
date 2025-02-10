@@ -64,6 +64,7 @@
         android:id="@+id/cardViewBottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/gray_white"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -71,7 +72,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="20dp">
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="20dp">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLayoutStatusButtons"
@@ -82,14 +85,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
-                <ImageButton
-                    android:id="@+id/imageButtonCheck"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_menu_camera"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/MCVCheck"
+                    app:srcCompat="@drawable/check"
+                    style="@style/OrderMCVStyle"
 
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="16dp"
+                        android:src="@drawable/check"/>
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:id="@+id/textViewTick"
@@ -97,35 +105,48 @@
                     android:layout_height="wrap_content"
                     android:text="-"
 
-                    app:layout_constraintStart_toEndOf="@+id/imageButtonCheck"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintStart_toEndOf="@+id/MCVCheck"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
-                <ImageButton
-                    android:id="@+id/imageButtonCooking"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_menu_camera"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/MCVCooking"
+                    app:srcCompat="@drawable/cooking"
+                    style="@style/OrderMCVStyle"
 
                     app:layout_constraintStart_toEndOf="@id/textViewTick"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="16dp"
+                        android:src="@drawable/cooking"/>
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:id="@+id/textViewTick1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="-"
+                    style="@style/TextViewTickStyle"
 
-                    app:layout_constraintStart_toEndOf="@id/imageButtonCooking"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintStart_toEndOf="@id/MCVCooking"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
-                <ImageButton
-                    android:id="@+id/imageButtonDelivering"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_menu_camera"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/MCVDelivering"
+                    app:srcCompat="@drawable/courier"
+                    style="@style/OrderMCVStyle"
 
                     app:layout_constraintStart_toEndOf="@id/textViewTick1"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="13dp"
+                        android:src="@drawable/courier"/>
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:id="@+id/textViewTick2"
@@ -133,17 +154,23 @@
                     android:layout_height="wrap_content"
                     android:text="-"
 
-                    app:layout_constraintStart_toEndOf="@id/imageButtonDelivering"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintStart_toEndOf="@id/MCVDelivering"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
 
-                <ImageButton
-                    android:id="@+id/imageButtonDelivered"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/ic_menu_camera"
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/MCVDelivered"
+                    app:srcCompat="@drawable/home_address"
+                    style="@style/OrderMCVStyle"
 
                     app:layout_constraintStart_toEndOf="@id/textViewTick2"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="17dp"
+                        android:src="@drawable/home_address"/>
+                </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -153,7 +180,8 @@
                 android:id="@+id/textViewStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Status"
+                android:text="@string/accepted"
+                android:layout_marginTop="25dp"
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -163,7 +191,9 @@
                 android:id="@+id/textViewStatusDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Status desc"
+                android:text="@string/status_desc_dummy"
+                android:textAlignment="center"
+                android:layout_marginTop="25dp"
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -173,7 +203,8 @@
                 android:id="@+id/textViewDeliveryTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Delivery Time"
+                android:text="@string/est_delivery_time"
+                android:layout_marginTop="20dp"
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -184,6 +215,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/open_check"
+                android:layout_marginTop="15dp"
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

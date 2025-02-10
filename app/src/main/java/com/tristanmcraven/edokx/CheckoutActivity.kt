@@ -43,7 +43,10 @@ class CheckoutActivity : AppCompatActivity() {
         initViews()
         CoroutineScope(Dispatchers.IO).launch {
             cartTotal = ApiClient.ICart.getTotal(GlobalVM.carts!!.first { it.restaurantId == rest.id }.id)!!
-            textViewOrderTotal.text = "${cartTotal + 178u} ₽"
+            withContext(Dispatchers.Main) {
+                textViewOrderTotal.text = "${cartTotal + 178u} ₽"
+            }
+
         }
     }
 
@@ -55,10 +58,11 @@ class CheckoutActivity : AppCompatActivity() {
         buttonPay = findViewById(R.id.buttonPay)
         buttonPay.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
-                val result = ApiClient.IOrder.create(GlobalVM.currentUser!!.id, rest.id, cart.id, editTextAddress.text.toString(), cartTotal + 178u)!!
-                if (result) {
+                val result = ApiClient.IOrder.create(GlobalVM.currentUser!!.id, rest.id, cart.id, editTextAddress.text.toString(), cartTotal + 178u)
+                if (result != null) {
                     withContext(Dispatchers.Main) {
                         val intent = Intent(this@CheckoutActivity, OrderActivity::class.java)
+                        intent.putExtra("orderNumber", result.id.toInt())
                         startActivity(intent)
                         finish()
                     }

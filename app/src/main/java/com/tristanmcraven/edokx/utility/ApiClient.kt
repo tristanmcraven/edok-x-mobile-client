@@ -102,6 +102,8 @@ object ApiClient {
             return sendRequest("restaurant", "GET", type, body = null)
         }
 
+        fun getById(restId: UInt): Restaurant? = sendRequest("restaurant/$restId", "GET", Restaurant::class.java)
+
         fun getCategoriesById(id: UInt): List<RestaurantCategory>?
         {
             val type = object: TypeToken<List<RestaurantCategory>>() {}.type
@@ -177,7 +179,7 @@ object ApiClient {
 
     object IOrder
     {
-        fun create(userId: UInt, restId: UInt, cartId: UInt, address: String, total: UInt): Boolean?
+        fun create(userId: UInt, restId: UInt, cartId: UInt, address: String, total: UInt): Order?
         {
             val dto = mapOf(
                 "UserId" to userId,
@@ -186,7 +188,16 @@ object ApiClient {
                 "Address" to address,
                 "Total" to total
             )
-            return sendRequest("order", "POST", dto)
+            return sendRequest("order", "POST", Order::class.java, dto)
+        }
+
+        fun getById(orderId: UInt): Order? {
+            return sendRequest("order/$orderId", "GET", Order::class.java)
+        }
+
+        fun getCartItems(orderId: UInt): List<CartItem>? {
+            val type = object: TypeToken<List<CartItem>>() {}.type
+            return sendRequest("order/$orderId/get_cart_items", "GET", type)
         }
     }
 }

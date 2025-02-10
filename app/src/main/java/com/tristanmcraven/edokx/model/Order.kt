@@ -8,9 +8,10 @@ data class Order(
     val restaurantId: UInt,
     val cartId: UInt,
     val status: String,
-    val createdAt: LocalDateTime,
-    val deliveredAt: LocalDateTime?,
-    val cancelledAt: LocalDateTime?,
+    val createdAt: String,
+    val deliveredAt: String?,
+    val cancelledAt: String?,
     val address: String,
-    val total: UInt
+    val total: UInt,
+    val kitchenStatusId: UInt
 )

@@ -5,6 +5,18 @@
         <item name="android:minHeight">15dp</item>
         <item name="layout_constraintTop_toTopOf">parent</item>
         <item name="layout_constraintBottom_toBottomOf">parent</item>
-
     </style>
+
+    <style name="OrderMCVStyle">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">64dp</item>
+        <item name="cardBackgroundColor">@color/white</item>
+<!--        <item name="cardElevation">20dp</item>-->
+        <item name="cardCornerRadius">32dp</item>
+    </style>
+
+    <style name="TextViewTickStyle">
+        <item name="android:layout_marginHorizontal">5dp</item>
+    </style>
+
 </resources>

@@ -28,4 +28,7 @@
     <string name="receiver_phone">Телефон получателя</string>
     <string name="total">Total</string>
     <string name="open_check">Открыть чек</string>
+    <string name="accepted">Принято</string>
+    <string name="est_delivery_time">Ориентировочное время доставки: 12:45</string>
+    <string name="status_desc_dummy">Ресторан начнет готовить заказ, когда найдется свободный курьер.</string>
 </resources>
