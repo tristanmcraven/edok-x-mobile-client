@@ -12,6 +12,8 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="fontFamily">@font/yandex_sans_regular</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="Theme.EdokX.NoActionBar">
