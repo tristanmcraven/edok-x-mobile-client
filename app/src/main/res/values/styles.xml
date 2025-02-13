@@ -17,6 +17,7 @@
 
     <style name="TextViewTickStyle">
         <item name="android:layout_marginHorizontal">5dp</item>
+        <item name="android:textSize">26sp</item>
     </style>
 
     <style name="WhiteButtonStyle">
@@ -25,6 +26,27 @@
         <item name="android:background">@color/white</item>
         <item name="backgroundTint">@color/white</item>
         <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="ImageButtonGoBackStyle">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_weight">0</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:padding">14dp</item>
+        <item name="android:src">@drawable/arrow_left</item>
+        <item name="backgroundTint">@color/white</item>
+        <item name="android:layout_marginStart">5dp</item>
+    </style>
+
+    <style name="TextViewTopBarStyle">
+        <item name="android:layout_marginStart">-55dp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:layout_weight">2</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
 </resources>

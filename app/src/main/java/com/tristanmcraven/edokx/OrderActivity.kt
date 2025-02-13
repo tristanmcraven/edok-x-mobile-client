@@ -1,15 +1,20 @@
 package com.tristanmcraven.edokx
 
+import android.content.Intent
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.marginTop
 import com.google.android.material.card.MaterialCardView
 import com.tristanmcraven.edok.model.CartItem
 import com.tristanmcraven.edok.model.Order
@@ -34,6 +39,7 @@ class OrderActivity : AppCompatActivity() {
     private lateinit var MCVCooking: MaterialCardView
     private lateinit var MCVDelivering: MaterialCardView
     private lateinit var MCVDelivered: MaterialCardView
+    private lateinit var buttonGoBack: ImageButton
     private lateinit var linearLayoutOrderContents: LinearLayout
 
     private var orderNumber: UInt = 0u
@@ -68,7 +74,14 @@ class OrderActivity : AppCompatActivity() {
         MCVCooking = findViewById(R.id.MCVCooking)
         MCVDelivering = findViewById(R.id.MCVDelivering)
         MCVDelivered = findViewById(R.id.MCVDelivered)
+        buttonGoBack = findViewById(R.id.buttonGoBack)
         linearLayoutOrderContents = findViewById(R.id.linearLayoutOrderContents)
+
+        buttonGoBack.setOnClickListener {
+            val intent = Intent(this@OrderActivity, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
             order = ApiClient.IOrder.getById(orderNumber)!!
@@ -81,11 +94,16 @@ class OrderActivity : AppCompatActivity() {
                 val food = ApiClient.IFood.getById(it.foodId)!!
                 views.add(TextView(this@OrderActivity).apply {
                     text = "${it.foodQuantity} x ${food.name} (${it.foodQuantity} x ${food.price}₽)"
+                    typeface = ResourcesCompat.getFont(this@OrderActivity, R.font.yandex_sans_light)
+                    setTextSize(16f)
                 })
             }
             views.add(View(this@OrderActivity).apply {
                 setBackgroundColor(Color.BLACK)
-                layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1)
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1
+                    ).apply {
+                        setMargins(0,25,20,25)
+                }
             })
 
             views.addAll(
@@ -121,6 +139,8 @@ class OrderActivity : AppCompatActivity() {
 
     fun createTextView(text: String) = TextView(this@OrderActivity).apply {
         this.text = text
+        typeface = ResourcesCompat.getFont(this@OrderActivity, R.font.yandex_sans_light)
+        setTextSize(16f)
     }
 
     private fun getEstimatedDeliveryTime(createdAt: String): String {

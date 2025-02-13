@@ -31,4 +31,5 @@
     <string name="accepted">Принято</string>
     <string name="est_delivery_time">Ориентировочное время доставки: 12:45</string>
     <string name="status_desc_dummy">Ресторан начнет готовить заказ, когда найдется свободный курьер.</string>
+    <string name="edok_caps">EDOK</string>
 </resources>

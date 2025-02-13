@@ -38,7 +38,6 @@ class AuthActivity : AppCompatActivity() {
         editTextPassword = findViewById(R.id.editTextPassword)
         buttonLogIn = findViewById(R.id.buttonLogIn)
         buttonSignUp = findViewById(R.id.buttonSignUp)
-        buttonContinue = findViewById(R.id.buttonContinue)
 
         buttonLogIn.setOnClickListener {
             val login = editTextLogin.text.toString()
