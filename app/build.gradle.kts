@@ -53,6 +53,7 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.androidx.activity)
     implementation(libs.moshi)
+    implementation(libs.jakarta.mail)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
