@@ -23,5 +23,8 @@
 
     <style name="Theme.EdokX.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <style name="Theme.EdokX.AppBarOverlay1" />
+
     <style name="Theme.EdokX.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.EdokX.PopupOverlay1" />
 </resources>

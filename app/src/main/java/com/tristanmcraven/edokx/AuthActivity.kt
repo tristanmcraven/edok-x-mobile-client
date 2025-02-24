@@ -63,5 +63,10 @@ class AuthActivity : AppCompatActivity() {
                 }
             }
         }
+
+        buttonSignUp.setOnClickListener {
+            val intent = Intent(this@AuthActivity, RegActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

@@ -92,6 +92,18 @@ object ApiClient {
         {
             return sendRequest("user/$userId/activecart?restid=$restId", "POST", Cart::class.java)
         }
+
+        fun register(lastName: String, name: String, phone: String, email: String, login: String, password: String): User? {
+            val dto = mapOf(
+                "LastName" to lastName,
+                "Name" to name,
+                "Phone" to phone,
+                "Email" to email,
+                "Login" to login,
+                "Password" to password
+            )
+            return sendRequest("user/register", "POST", User::class.java, dto)
+        }
     }
 
     object IRestaurant
