@@ -11,9 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
-import jakarta.mail.*
-import jakarta.mail.internet.InternetAddress
-import jakarta.mail.internet.MimeMessage
+import com.tristanmcraven.edok.utility.ApiClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,20 +50,25 @@ class RegActivity : AppCompatActivity() {
         editTextPassword = findViewById(R.id.editTextPassword)
         buttonRegister = findViewById(R.id.buttonRegister)
         buttonRegister.setOnClickListener {
-            if (isSomethingEmpty()) {
-                Toast.makeText(this, "Заполните все поля!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            lifecycleScope.launch {
-                val success = sendEmail(editTextEmail.text.toString(), editTextName.text.toString(), editTextLastName.text.toString())
-                if (success) {
-                    Toast.makeText(this@RegActivity, "Успешная регистрация!", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this@RegActivity, AuthActivity::class.java)
-                    startActivity(intent)
-                    finish()
-                }
-                else {
-                    Toast.makeText(this@RegActivity, "FAIL!", Toast.LENGTH_SHORT).show()
+            CoroutineScope(Dispatchers.IO).launch {
+                var user = ApiClient.IUser.register(
+                    editTextLastName.text.toString(),
+                    editTextName.text.toString(),
+                    editTextPhone.text.toString(),
+                    editTextEmail.text.toString(),
+                    editTextLogin.text.toString(),
+                    editTextPassword.text.toString()
+                )
+                withContext(Dispatchers.Main) {
+                    if (user == null) {
+                        Toast.makeText(this@RegActivity, "Пользователь с такими данными уже существует!", Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        Toast.makeText(this@RegActivity, "Успешная регистрация!", Toast.LENGTH_SHORT).show()
+                        intent = Intent(this@RegActivity, AuthActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
                 }
             }
         }
@@ -78,39 +81,39 @@ class RegActivity : AppCompatActivity() {
             editTextLogin.text.isNullOrBlank() ||
             editTextPassword.text.isNullOrBlank()
 
-    suspend fun sendEmail(toEmail: String, name: String, lastName: String): Boolean {
-        return withContext(Dispatchers.IO) {
-            val username = "jamalsaydayev@yandex.ru"
-            val password = "mcgzdifgelojoiik"
-
-            val properties = Properties().apply {
-                put("mail.smtp.host", "smtp.yandex.com")
-                put("mail.smtp.socketFactory.port", "465")
-                put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory")
-                put("mail.smtp.auth", "true")
-                put("mail.smtp.port", "465")
-            }
-
-            val session = Session.getInstance(properties, object : Authenticator() {
-                override fun getPasswordAuthentication(): PasswordAuthentication {
-                    return PasswordAuthentication(username, password)
-                }
-            })
-
-
-            return@withContext try {
-                val message = MimeMessage(session).apply {
-                    setFrom(InternetAddress(username, "Сервис Edok"))
-                    setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail))
-                    subject = "Подтверждение регистрации"
-                    setText("Здравствуйте, $lastName $name! Вы зарегистрировались в Edok и теперь можете оформлять заказы через мобильное приложение.")
-                }
-                Transport.send(message)
-                true
-            } catch (e: Exception) {
-                e.printStackTrace()
-                false
-            }
-        }
-    }
+//    suspend fun sendEmail(toEmail: String, name: String, lastName: String): Boolean {
+//        return withContext(Dispatchers.IO) {
+//            val username = "jamalsaydayev@yandex.ru"
+//            val password = "mcgzdifgelojoiik"
+//
+//            val properties = Properties().apply {
+//                put("mail.smtp.host", "smtp.yandex.com")
+//                put("mail.smtp.socketFactory.port", "465")
+//                put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory")
+//                put("mail.smtp.auth", "true")
+//                put("mail.smtp.port", "465")
+//            }
+//
+//            val session = Session.getInstance(properties, object : Authenticator() {
+//                override fun getPasswordAuthentication(): PasswordAuthentication {
+//                    return PasswordAuthentication(username, password)
+//                }
+//            })
+//
+//
+//            return@withContext try {
+//                val message = MimeMessage(session).apply {
+//                    setFrom(InternetAddress(username, "Сервис Edok"))
+//                    setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail))
+//                    subject = "Подтверждение регистрации"
+//                    setText("Здравствуйте, $lastName $name! Вы зарегистрировались в Edok и теперь можете оформлять заказы через мобильное приложение.")
+//                }
+//                Transport.send(message)
+//                true
+//            } catch (e: Exception) {
+//                e.printStackTrace()
+//                false
+//            }
+//        }
+//    }
 }

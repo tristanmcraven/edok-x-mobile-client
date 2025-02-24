@@ -90,7 +90,7 @@ object ApiClient {
 
         fun getActiveCartByRestId(userId: UInt, restId: UInt): Cart?
         {
-            return sendRequest("user/$userId/activecart?restid=$restId", "POST", Cart::class.java)
+            return sendRequest("user/$userId/activecart?restid=$restId", "GET", Cart::class.java)
         }
 
         fun register(lastName: String, name: String, phone: String, email: String, login: String, password: String): User? {

@@ -12,25 +12,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonGoBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:textSize="30dp"
-            android:minWidth="0dp"
-            android:text="←" />
+            style="@style/ImageButtonGoBackStyle"/>
 
         <TextView
             android:id="@+id/textViewRestName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Rest" />
+            style="@style/TextViewTopBarStyle"
+            android:text="@string/cart"/>
 
     </LinearLayout>
 

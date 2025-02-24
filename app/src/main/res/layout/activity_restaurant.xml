@@ -11,27 +11,20 @@
         android:id="@+id/linearLayoutTopBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
 
-        <Button
+        >
+
+        <ImageButton
             android:id="@+id/goBackButton"
-            android:layout_width="40dp"
-            android:layout_height="wrap_content"
-            android:padding="0dp"
-            android:text="←"
-            android:textSize="30sp"
-            android:layout_weight="0"
-            android:minWidth="40dp"
+            style="@style/ImageButtonGoBackStyle"
 
             />
 
         <TextView
             android:id="@+id/textViewRestName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TextView"
-            android:layout_weight="1"
-
+            style="@style/TextViewTopBarStyle"
             />
     </LinearLayout>
 

@@ -12,24 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:gravity="center_vertical"
 
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
+        <ImageButton
             android:id="@+id/buttonGoBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="50dp"
-            android:layout_weight="1"
-            android:text="←" />
+            style="@style/ImageButtonGoBackStyle"/>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:text="@string/delivery"
-            android:textAlignment="center"/>
+            style="@style/TextViewTopBarStyle"/>
 
 
     </LinearLayout>
