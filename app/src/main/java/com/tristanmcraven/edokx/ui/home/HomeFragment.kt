@@ -78,7 +78,7 @@ class HomeFragment : Fragment() {
                     imgRestaurant.setImageBitmap(BitmapFactory.decodeByteArray(rawImage, 0, rawImage.size))
                     textViewRestName.text = rest.name
                     textViewDeliverTime.text = "20-30 мин"
-                    textViewCategories.text = categoryNames.joinToString(", ")
+                    textViewCategories.text = categoryNames.take(3).joinToString(", ")
 
                     scrollViewContainer.addView(restaurantView) // Add the restaurant view to the container
                 }

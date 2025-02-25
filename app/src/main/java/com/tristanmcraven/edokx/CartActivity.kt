@@ -3,6 +3,7 @@ package com.tristanmcraven.edokx
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -16,7 +17,7 @@ import com.tristanmcraven.edokx.adapter.CartItemAdapter
 
 class CartActivity : AppCompatActivity() {
 
-    private lateinit var buttonGoBack: Button
+    private lateinit var buttonGoBack: ImageButton
     private lateinit var textViewRestName: TextView
     private lateinit var buttonNext: Button
     private lateinit var recyclerViewCartItems: RecyclerView
@@ -42,6 +43,9 @@ class CartActivity : AppCompatActivity() {
     private fun initViews()
     {
         buttonGoBack = findViewById(R.id.buttonGoBack)
+        buttonGoBack.setOnClickListener {
+            onBackPressed()
+        }
         buttonNext = findViewById(R.id.buttonNext)
         buttonNext.setOnClickListener {
             val intent = Intent(this, CheckoutActivity::class.java)

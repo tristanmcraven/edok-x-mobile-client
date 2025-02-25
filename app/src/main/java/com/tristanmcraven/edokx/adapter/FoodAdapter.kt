@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.RecyclerView
 import com.tristanmcraven.edok.model.Food
 import com.tristanmcraven.edok.utility.ApiClient

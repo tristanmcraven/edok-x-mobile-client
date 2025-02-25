@@ -2,16 +2,17 @@ package com.tristanmcraven.edokx
 
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.graphics.Rect
 import android.os.Bundle
-import android.widget.Button
+import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.children
-import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
@@ -35,7 +36,9 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
     private lateinit var textViewRestName: TextView
     private lateinit var containerCategories: ChipGroup
     private lateinit var recyclerViewFood: RecyclerView
-    private lateinit var buttonOrder: Button
+//    private lateinit var buttonOrder: Button
+    private lateinit var cardViewOrder: CardView
+    private lateinit var buttonGoBack: ImageButton
 
     private lateinit var foodList: List<Food>
     private lateinit var categories: List<FoodCategory?>
@@ -99,15 +102,22 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
         textViewRestName = findViewById(R.id.textViewRestName)
         containerCategories = findViewById(R.id.containerCategories)
         recyclerViewFood = findViewById(R.id.recyclerViewFood)
-        buttonOrder = findViewById(R.id.buttonOrder)
+//        buttonOrder = findViewById(R.id.buttonOrder)
+        cardViewOrder = findViewById(R.id.cardViewOrder)
         recyclerViewFood.layoutManager = GridLayoutManager(this, 2)
+        recyclerViewFood.addItemDecoration(GridSpacingItemDecoration(16))
         containerCategories.isSelectionRequired = true
 
-        buttonOrder.setOnClickListener {
+        cardViewOrder.setOnClickListener {
             val intent = Intent(this, CartActivity::class.java)
             intent.putParcelableArrayListExtra("cartItems", ArrayList(cartItems))
             intent.putExtra("rest", rest)
             startActivity(intent)
+        }
+
+        buttonGoBack = findViewById(R.id.buttonGoBack)
+        buttonGoBack.setOnClickListener {
+            onBackPressed()
         }
     }
 
@@ -119,8 +129,8 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
                 intArrayOf(-android.R.attr.state_checked) // When chip is not selected
             ),
             intArrayOf(
-                getColor(R.color.teal_700), // Selected background color
-                getColor(R.color.teal_200)  // Default background color
+                getColor(R.color.selected_chip_color), // Selected background color
+                getColor(R.color.transparent)  // Default background color
             )
         )
 
@@ -131,8 +141,8 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
                 intArrayOf(-android.R.attr.state_checked) // When chip is not selected
             ),
             intArrayOf(
-                getColor(R.color.purple_500), // Selected stroke color
-                getColor(R.color.purple_200)         // Default stroke color
+                getColor(R.color.transparent), // Selected stroke color
+                getColor(R.color.transparent)  // Default stroke color
             )
         )
 
@@ -171,4 +181,27 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
 
 interface OnFoodAddedListener {
     fun onFoodAdded(food: Food)
+}
+
+class GridSpacingItemDecoration(private val space: Int) : RecyclerView.ItemDecoration() {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
+        val position = parent.getChildAdapterPosition(view)
+        val spanCount = 2
+
+        if (position % spanCount == 0) {
+            outRect.right = space / 2
+        }
+        else {
+            outRect.left = space / 2
+        }
+
+        if (position >= spanCount) {
+            outRect.top = space
+        }
+    }
 }
