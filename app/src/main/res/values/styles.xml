@@ -49,4 +49,10 @@
         <item name="android:textSize">20sp</item>
     </style>
 
+    <style name="YellowButtonStyle">
+        <item name="android:backgroundTint">@color/yellow_button</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>

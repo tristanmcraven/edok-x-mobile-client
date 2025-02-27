@@ -15,24 +15,41 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EdokX"
         tools:targetApi="31">
+
+        <provider
+            android:authorities="${applicationId}.provider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
         <activity
             android:name=".RegActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.EdokX.NoActionBar"/>
         <activity
             android:name=".OrderActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.EdokX.NoActionBar" />
         <activity
             android:name=".CheckoutActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.EdokX.NoActionBar" />
         <activity
             android:name=".CartActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.EdokX.NoActionBar" />
         <activity
             android:name=".RestaurantActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.EdokX.NoActionBar" />
         <activity
             android:name=".AuthActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.EdokX.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

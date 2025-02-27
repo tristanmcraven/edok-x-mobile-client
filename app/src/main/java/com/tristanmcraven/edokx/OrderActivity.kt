@@ -2,28 +2,45 @@ package com.tristanmcraven.edokx
 
 import android.content.Intent
 import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.marginTop
 import com.google.android.material.card.MaterialCardView
+import com.itextpdf.io.font.PdfEncodings
+import com.itextpdf.io.source.ByteArrayOutputStream
+import com.itextpdf.kernel.colors.ColorConstants
+import com.itextpdf.kernel.font.PdfFontFactory
+import com.itextpdf.kernel.pdf.PdfDocument
+import com.itextpdf.kernel.pdf.PdfWriter
+import com.itextpdf.layout.Document
+import com.itextpdf.layout.borders.Border
+import com.itextpdf.layout.element.Cell
+import com.itextpdf.layout.element.Paragraph
+import com.itextpdf.layout.element.Table
+import com.itextpdf.layout.element.Text
+import com.itextpdf.layout.properties.TextAlignment
+import com.itextpdf.layout.properties.UnitValue
 import com.tristanmcraven.edok.model.CartItem
 import com.tristanmcraven.edok.model.Order
 import com.tristanmcraven.edok.model.Restaurant
 import com.tristanmcraven.edok.utility.ApiClient
+import com.tristanmcraven.edokx.utility.GlobalVM
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -40,6 +57,7 @@ class OrderActivity : AppCompatActivity() {
     private lateinit var MCVDelivering: MaterialCardView
     private lateinit var MCVDelivered: MaterialCardView
     private lateinit var buttonGoBack: ImageButton
+    private lateinit var buttonOpenCheck: Button
     private lateinit var linearLayoutOrderContents: LinearLayout
 
     private var orderNumber: UInt = 0u
@@ -76,6 +94,10 @@ class OrderActivity : AppCompatActivity() {
         MCVDelivered = findViewById(R.id.MCVDelivered)
         buttonGoBack = findViewById(R.id.buttonGoBack)
         linearLayoutOrderContents = findViewById(R.id.linearLayoutOrderContents)
+        buttonOpenCheck = findViewById(R.id.buttonOpenCheck)
+        buttonOpenCheck.setOnClickListener {
+            createCheck()
+        }
 
         buttonGoBack.setOnClickListener {
             val intent = Intent(this@OrderActivity, MainActivity::class.java)
@@ -148,5 +170,174 @@ class OrderActivity : AppCompatActivity() {
         val orderTime = LocalDateTime.parse(createdAt, formatter)
         val estimatedTime = orderTime.plusMinutes(45)
         return estimatedTime.format(DateTimeFormatter.ofPattern("HH:mm"))
+    }
+
+    private fun createCheck() {
+        try {
+            var time = LocalDateTime.now()
+
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            val writer = PdfWriter(byteArrayOutputStream)
+            val pdf = PdfDocument(writer)
+            val document = Document(pdf)
+
+            val defaultFont = PdfFontFactory.createFont("res/font/yandex_sans_medium.ttf", PdfEncodings.IDENTITY_H)
+            val boldFont = PdfFontFactory.createFont("res/font/yandex_sans_bold.ttf", PdfEncodings.IDENTITY_H)
+
+            val topTable = Table(UnitValue.createPercentArray(floatArrayOf(1f, 1f))).useAllAvailableWidth()
+
+            topTable.addCell(Cell().add(Paragraph("кассовый чек / приход").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+            topTable.addCell(Cell().add(Paragraph("${time.dayOfMonth}.${time.monthValue}.${time.year} ${time.hour}:${time.minute}").setFont(defaultFont)
+                .setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+            topTable.addCell(Cell(1,2).add(Paragraph("ОБЩЕСТВО С ОГРАНИЧЕННОЙ\nОТВЕТСТВЕННОСТЬЮ \"ЕДОК\"").setFont(boldFont)
+                .setTextAlignment(TextAlignment.CENTER)).setBorder(Border.NO_BORDER))
+
+            topTable.addCell(Cell().add(Paragraph("ИНН").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+            topTable.addCell(Cell().add(Paragraph("9705114405").setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+            topTable.addCell(Cell().add(Paragraph("Налогообложение").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+            topTable.addCell(Cell().add(Paragraph("ОСН").setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+
+            val middleTable = Table(UnitValue.createPercentArray(floatArrayOf(1f, 4f, 5f))).useAllAvailableWidth()
+
+            middleTable.addCell(Cell().add(Paragraph("№").setFont(boldFont)).setBorder(Border.NO_BORDER))
+            middleTable.addCell(Cell().add(Paragraph("Наименование").setFont(boldFont)).setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER))
+            middleTable.addCell(Cell().add(Paragraph("Cумма").setFont(boldFont)).setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER))
+
+            CoroutineScope(Dispatchers.IO).launch {
+                var counter = 1
+                val items = cartItems.map {
+                    val food = ApiClient.IFood.getById(it.foodId)!!
+                    Triple(it, food, (food.price.toFloat() / 1.2 * 0.2)) // Precalculate VAT outside UI
+                }
+
+                withContext(Dispatchers.Main) {
+                    items.forEach { (cartItem, food, vat) ->
+                        middleTable.addCell(Cell().add(Paragraph("$counter.").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().add(Paragraph("${food.name}").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().add(Paragraph("${food.price}₽ x ${cartItem.foodQuantity} = ${food.price * cartItem.foodQuantity}₽").setFont(defaultFont)
+                            .setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                        middleTable.addCell(Cell().setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().add(Paragraph("В том числе НДС 20%").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().add(Paragraph("${String.format("%.2f", vat)}₽")
+                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                        middleTable.addCell(Cell().setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().add(Paragraph("Мера количества").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().add(Paragraph("шт. или ед.")
+                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                        middleTable.addCell(Cell().setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().add(Paragraph("ИНН поставщика").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().add(Paragraph("${rest.inn}")
+                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                        middleTable.addCell(Cell().setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().add(Paragraph("Товар / полный расчет").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().add(Paragraph()
+                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                        counter++
+                    }
+                    val bottomTable = Table(UnitValue.createPercentArray(floatArrayOf(1f, 1f))).useAllAvailableWidth()
+
+                    bottomTable.addCell(Cell().add(Paragraph("Итого").setFont(boldFont)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("${order.total}₽").setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                    bottomTable.addCell(Cell().add(Paragraph("В том числе НДС 20%").setFont(defaultFont).setFontColor(ColorConstants.GRAY)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("${String.format("%.2f" , order.total.toFloat() / 1.2 * 0.2)}₽")
+                        .setFont(defaultFont).setFontColor(ColorConstants.GRAY).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                    bottomTable.addCell(Cell().add(Paragraph("Сумма без НДС").setFont(defaultFont).setFontColor(ColorConstants.GRAY)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("${String.format("%.2f", order.total.toFloat() - (order.total.toFloat() / 1.2 * 0.2))}₽")
+                        .setFont(defaultFont).setFontColor(ColorConstants.GRAY).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                    bottomTable.addCell(Cell().add(Paragraph("Безналичными").setFont(boldFont)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("${order.total}₽").setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                    bottomTable.addCell(Cell().add(Paragraph("Эл. адрес покупателя").setFont(boldFont)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("${GlobalVM.currentUser!!.email}")
+                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                    bottomTable.addCell(Cell().add(Paragraph("Эл. адрес отправителя").setFont(boldFont)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("no-reply@ofd.edok.ru")
+                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                    bottomTable.addCell(Cell().add(Paragraph("Адрес сайта ФНС").setFont(boldFont)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("www.nalog.gov.ru")
+                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                    bottomTable.addCell(Cell().add(Paragraph("Название ОФД").setFont(boldFont)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("Едок.ОФД")
+                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                    bottomTable.addCell(Cell().add(Paragraph("ИНН ОФД").setFont(boldFont)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("7704358518")
+                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+
+                    document.add(topTable)
+                    document.add(middleTable)
+                    document.add(bottomTable)
+                    document.close()
+
+                    openPdfFromByteArray(byteArrayOutputStream.toByteArray())
+                }
+//                cartItems.forEach {
+//                    val food = ApiClient.IFood.getById(it.foodId)!!
+//
+//
+//                        middleTable.addCell(Cell().add(Paragraph("$counter.").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+//                        middleTable.addCell(Cell().add(Paragraph("${food.name}").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+//                        middleTable.addCell(Cell().add(Paragraph("${food.price}₽ ⨯ ${it.foodQuantity} = ${food.price * it.foodQuantity}₽").setFont(defaultFont)
+//                            .setTextAlignment(TextAlignment.CENTER)).setBorder(Border.NO_BORDER))
+//
+//                        middleTable.addCell(Cell())
+//                        middleTable.addCell(Cell().add(Paragraph("В том числе НДС 20%").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+//                        middleTable.addCell(Cell().add(Paragraph("${(food.price.toFloat() / 1.2 * 0.2)}₽")
+//                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+//
+//                        middleTable.addCell(Cell())
+//                        middleTable.addCell(Cell().add(Paragraph("Мера количества").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+//                        middleTable.addCell(Cell().add(Paragraph("${(food.price.toFloat() / 1.2 * 0.2)}₽")
+//                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+//
+//                        middleTable.addCell(Cell())
+//                        middleTable.addCell(Cell().add(Paragraph("ИНН поставщика").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+//                        middleTable.addCell(Cell().add(Paragraph("${rest.inn}")
+//                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+//
+//                        middleTable.addCell(Cell())
+//                        middleTable.addCell(Cell().add(Paragraph("Товар / полный расчет").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+//                        middleTable.addCell(Cell().add(Paragraph()
+//                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+//
+//                        counter++
+//
+//                }
+            }
+
+
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+    }
+
+    private fun openPdfFromByteArray(pdf: ByteArray) {
+        val file = File(this@OrderActivity.cacheDir, "temp.pdf")
+        FileOutputStream(file).use {
+            it.write(pdf)
+        }
+
+        val uri = FileProvider.getUriForFile(this@OrderActivity, "${packageName}.provider", file)
+        val intent = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, "application/pdf")
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        this@OrderActivity.startActivity(intent)
     }
 }

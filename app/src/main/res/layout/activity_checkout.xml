@@ -28,93 +28,108 @@
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textViewWhere"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/where"
-        android:textSize="40sp"
-
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayoutTopBar"/>
-
-    <EditText
-        android:id="@+id/editTextAddress"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:text="г. Уфа, ул. Примерная, д.136"
+        android:layout_marginHorizontal="16dp"
 
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewWhere"/>
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutTopBar"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <EditText
-        android:id="@+id/editTextEntrance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="@string/entrance"
+        <TextView
+            android:id="@+id/textViewWhere"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/where"
+            android:textSize="40sp"
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextAddress"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    <EditText
-        android:id="@+id/editTextIntercom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="@string/intercom"
+        <EditText
+            android:id="@+id/editTextAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:text="г. Уфа, ул. Примерная, д.136"
 
-        app:layout_constraintStart_toEndOf="@id/editTextEntrance"
-        app:layout_constraintTop_toBottomOf="@id/editTextAddress"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewWhere"/>
 
-    <EditText
-        android:id="@+id/editTextApartment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="@string/apartment"
+        <EditText
+            android:id="@+id/editTextEntrance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="@string/entrance"
 
-        app:layout_constraintTop_toBottomOf="@id/editTextEntrance"
-        app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/editTextIntercom"
+            app:layout_constraintTop_toBottomOf="@id/editTextAddress"/>
 
-    <EditText
-        android:id="@+id/editTextFloor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="@string/floor"
+        <EditText
+            android:id="@+id/editTextIntercom"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="@string/intercom"
 
-        app:layout_constraintTop_toBottomOf="@id/editTextIntercom"
-        app:layout_constraintStart_toEndOf="@id/editTextApartment"/>
+            app:layout_constraintStart_toEndOf="@id/editTextEntrance"
+            app:layout_constraintTop_toBottomOf="@id/editTextAddress"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-    <EditText
-        android:id="@+id/editTextComment"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="@string/comment"
+        <EditText
+            android:id="@+id/editTextApartment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="@string/apartment"
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextApartment"
-        app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/editTextEntrance"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/editTextFloor"/>
 
-    <EditText
-        android:id="@+id/editTextPhone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="@string/receiver_phone"
+        <EditText
+            android:id="@+id/editTextFloor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="@string/floor"
 
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/editTextComment"/>
+            app:layout_constraintTop_toBottomOf="@id/editTextIntercom"
+            app:layout_constraintStart_toEndOf="@id/editTextApartment"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <EditText
+            android:id="@+id/editTextComment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="@string/comment"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTextApartment"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <EditText
+            android:id="@+id/editTextPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="text"
+            android:hint="@string/receiver_phone"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/editTextComment"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardViewBottom"
@@ -127,7 +142,8 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:paddingVertical="10dp">
 
             <TextView
                 android:id="@+id/textViewOrderTotal"
@@ -146,7 +162,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/pay"
-                android:layout_marginLeft="20dp"
+                android:layout_marginHorizontal="20dp"
+                android:backgroundTint="@color/yellow_button"
+                android:textColor="@color/black"
+                android:textFontWeight="700"
+                android:textAllCaps="false"
 
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/textViewOrderTotal"/>

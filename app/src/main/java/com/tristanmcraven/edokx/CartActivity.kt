@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,7 +20,7 @@ class CartActivity : AppCompatActivity() {
 
     private lateinit var buttonGoBack: ImageButton
     private lateinit var textViewRestName: TextView
-    private lateinit var buttonNext: Button
+    private lateinit var cardViewNext: CardView
     private lateinit var recyclerViewCartItems: RecyclerView
 
     private lateinit var rest: Restaurant
@@ -46,8 +47,8 @@ class CartActivity : AppCompatActivity() {
         buttonGoBack.setOnClickListener {
             onBackPressed()
         }
-        buttonNext = findViewById(R.id.buttonNext)
-        buttonNext.setOnClickListener {
+        cardViewNext = findViewById(R.id.cardViewNext)
+        cardViewNext.setOnClickListener {
             val intent = Intent(this, CheckoutActivity::class.java)
             intent.putExtra("rest", rest)
             intent.putParcelableArrayListExtra("cartItems", ArrayList(cartItems))

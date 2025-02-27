@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.activity)
     implementation(libs.moshi)
     implementation(libs.jakarta.mail)
+    implementation(libs.itext)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
