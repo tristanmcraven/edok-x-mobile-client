@@ -58,6 +58,8 @@ class AuthActivity : AppCompatActivity() {
                     GlobalVM.carts = carts
 
                     val intent = Intent(this@AuthActivity, MainActivity::class.java)
+                    intent.putExtra("user_name", "${user.surname} ${user.name}")
+                    intent.putExtra("user_email", user.email)
                     startActivity(intent)
                     finish()
                 }

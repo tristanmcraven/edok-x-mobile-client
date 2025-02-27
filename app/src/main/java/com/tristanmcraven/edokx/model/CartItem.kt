@@ -8,6 +8,6 @@ data class CartItem(
     val id: UInt,
     val cartId: UInt,
     val foodId: UInt,
-    val foodQuantity: UInt,
+    var foodQuantity: UInt,
     val utensilsQuantity: UInt
 ) : Parcelable

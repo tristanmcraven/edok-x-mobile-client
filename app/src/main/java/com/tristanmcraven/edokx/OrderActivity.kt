@@ -37,6 +37,8 @@ import com.tristanmcraven.edok.utility.ApiClient
 import com.tristanmcraven.edokx.utility.GlobalVM
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -78,7 +80,8 @@ class OrderActivity : AppCompatActivity() {
 
         retrieveIntentData()
         initViews()
-
+        updateOrderContents()
+        updateOrderSync()
     }
 
     fun initViews() {
@@ -104,7 +107,9 @@ class OrderActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
 
+    private fun updateOrderContents() {
         CoroutineScope(Dispatchers.IO).launch {
             order = ApiClient.IOrder.getById(orderNumber)!!
             rest = ApiClient.IRestaurant.getById(order.restaurantId)!!
@@ -123,8 +128,8 @@ class OrderActivity : AppCompatActivity() {
             views.add(View(this@OrderActivity).apply {
                 setBackgroundColor(Color.BLACK)
                 layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 1
-                    ).apply {
-                        setMargins(0,25,20,25)
+                ).apply {
+                    setMargins(0,25,20,25)
                 }
             })
 
@@ -139,18 +144,65 @@ class OrderActivity : AppCompatActivity() {
 
             withContext(Dispatchers.Main) {
                 views.forEach {linearLayoutOrderContents.addView(it)}
+
                 textViewOrderNumber.text = "Заказ №${order.id}"
                 textViewRestName.text = "${rest.name}"
                 textViewRestAddress.text = rest.address
+            }
+        }
+    }
 
-                when (order.kitchenStatusId) {
-                    1u -> {
-                        textViewStatus.text = "Принято"
-                        textViewStatusDescription.text = "Ресторан начнет готовить заказ, когда найдется свободный курьер"
-                        textViewDeliveryTime.text = "Ориентировочное время доставки: ${getEstimatedDeliveryTime(order.createdAt)}"
-                        MCVCheck.setCardBackgroundColor(Color.YELLOW)
+    private fun updateOrderSync() {
+            CoroutineScope(Dispatchers.IO).launch {
+                while (isActive) {
+                    order = ApiClient.IOrder.getById(orderNumber)!!
+                    withContext(Dispatchers.Main) {
+                        when (order.kitchenStatusId) {
+                            1u -> {
+                                textViewStatus.text = "Принято"
+                                textViewStatusDescription.text = "Ресторан начнет готовить заказ, когда найдется свободный курьер"
+                                textViewDeliveryTime.text = "Ориентировочное время доставки: ${getEstimatedDeliveryTime(order.createdAt)}"
+                                MCVCheck.setCardBackgroundColor(Color.YELLOW)
+                            }
+                            2u -> {
+                                textViewStatus.text = "Готовится"
+                                textViewStatusDescription.text = "Ресторан готовит еду, а курьер уже на пути к ресторану"
+                                textViewDeliveryTime.text = "Ориентировочное время доставки: ${getEstimatedDeliveryTime(order.createdAt)}"
+                                MCVCheck.setCardBackgroundColor(Color.YELLOW)
+                                MCVCooking.setCardBackgroundColor(Color.YELLOW)
+                            }
+                            4u -> {
+                                textViewStatus.text = "В пути"
+                                textViewStatusDescription.text = "Курьер получил ваш заказ и направляется к вашему дому"
+                                textViewDeliveryTime.text = "Ориентировочное время доставки: ${getEstimatedDeliveryTime(order.createdAt)}"
+                                MCVCheck.setCardBackgroundColor(Color.YELLOW)
+                                MCVCooking.setCardBackgroundColor(Color.YELLOW)
+                                MCVDelivering.setCardBackgroundColor(Color.YELLOW)
+                            }
+                            5u -> {
+                                textViewStatus.text = "Доставлено"
+                                textViewStatusDescription.text = "Надеемся, вы получили заказ в ценности и сохранности. " +
+                                        "Приятного аппетита!"
+                                textViewDeliveryTime.text = "Ориентировочное время доставки: ${getEstimatedDeliveryTime(order.createdAt)}"
+                                MCVCheck.setCardBackgroundColor(Color.YELLOW)
+                                MCVCooking.setCardBackgroundColor(Color.YELLOW)
+                                MCVDelivering.setCardBackgroundColor(Color.YELLOW)
+                                MCVDelivered.setCardBackgroundColor(Color.YELLOW)
+                            }
+                        }
+
+                        if (order.status == "cancelled") {
+                            MCVCheck.setCardBackgroundColor(Color.WHITE)
+                            MCVCooking.setCardBackgroundColor(Color.WHITE)
+                            MCVDelivering.setCardBackgroundColor(Color.WHITE)
+                            MCVDelivered.setCardBackgroundColor(Color.WHITE)
+
+                            textViewStatus.text = "Отменено"
+                            textViewStatusDescription.text = " \n "
+                            textViewDeliveryTime.text = " \n "
+                        }
                     }
-                }
+                    delay(3000)
             }
         }
     }

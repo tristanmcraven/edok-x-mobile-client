@@ -44,6 +44,8 @@
         android:id="@+id/cardViewFoodCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/gray_white"
+        app:cardCornerRadius="10dp"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -56,20 +58,22 @@
             <Button
                 android:id="@+id/buttonReduceCount"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="-"
+                android:text="–"
                 style="@style/FoodCountStyle"
 
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/textViewFoodCount"/>
+                app:layout_constraintEnd_toStartOf="@id/textViewFoodCount"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
                 android:id="@+id/textViewFoodCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1"
-                android:layout_margin="10dp"
+                android:layout_marginHorizontal="15dp"
+                android:textSize="21sp"
+                android:padding="0dp"
 
                 app:layout_constraintStart_toEndOf="@id/buttonReduceCount"
                 app:layout_constraintEnd_toStartOf="@+id/buttonIncreaseCount"
@@ -79,12 +83,12 @@
             <Button
                 android:id="@+id/buttonIncreaseCount"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="+"
                 style="@style/FoodCountStyle"
 
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
@@ -97,7 +101,7 @@
     <View
         android:id="@+id/separator"
         android:layout_width="0dp"
-        android:layout_height="1dp"
+        android:layout_height="0.5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:background="@color/black"

@@ -2,6 +2,7 @@ package com.tristanmcraven.edokx
 
 import android.os.Bundle
 import android.view.Menu
+import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -33,11 +34,20 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_home, R.id.nav_home
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        val userName = intent.getStringExtra("user_name")
+        val userEmail = intent.getStringExtra("user_email")
+
+        val headerView = navView.getHeaderView(0)
+        val textViewUserFullname = headerView.findViewById<TextView>(R.id.textViewUserFullname)
+        val textViewUserEmail = headerView.findViewById<TextView>(R.id.textViewUserEmail)
+        textViewUserFullname.text = userName
+        textViewUserEmail.text = userEmail
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

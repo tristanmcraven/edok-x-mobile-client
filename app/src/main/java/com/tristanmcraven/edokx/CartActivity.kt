@@ -14,7 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.tristanmcraven.edok.model.CartItem
 import com.tristanmcraven.edok.model.Restaurant
+import com.tristanmcraven.edok.utility.ApiClient
 import com.tristanmcraven.edokx.adapter.CartItemAdapter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class CartActivity : AppCompatActivity() {
 
@@ -68,17 +72,30 @@ class CartActivity : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         recyclerViewCartItems.layoutManager = LinearLayoutManager(this)
-        adapter = CartItemAdapter(cartItems,
+        adapter = CartItemAdapter(cartItems.toMutableList(),
             onIncrease = {increaseQuantity(it)},
             onDecrease = {decreaseQuantity(it)})
         recyclerViewCartItems.adapter = adapter
     }
 
     private fun increaseQuantity(item: CartItem) {
+        item.foodQuantity++
+        adapter.updateItem(item)
 
+        CoroutineScope(Dispatchers.IO).launch {
+            ApiClient.ICart.addItem(cartItems.first().cartId, item.id)
+        }
     }
 
     private fun decreaseQuantity(item: CartItem) {
-
+        if (item.foodQuantity > 1u) {
+            item.foodQuantity--
+            adapter.updateItem(item)
+        } else {
+            adapter.removeItem(item)
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            ApiClient.ICart.decreaseQuantity(cartItems.first().cartId, item.id)
+        }
     }
 }

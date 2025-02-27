@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class CartItemAdapter(
-    private val cartItems: List<CartItem>,
+    private val cartItems: MutableList<CartItem>,
     private val onIncrease: (CartItem) -> Unit,
     private val onDecrease: (CartItem) -> Unit
 ) : RecyclerView.Adapter<CartItemAdapter.CartItemViewHolder>() {
@@ -61,4 +61,18 @@ class CartItemAdapter(
 
     override fun getItemCount(): Int = cartItems.size
 
+    fun removeItem(item: CartItem) {
+        val position = cartItems.indexOf(item)
+        if (position != -1) {
+            cartItems.removeAt(position)
+            notifyItemRemoved(position)
+        }
+    }
+
+    fun updateItem(item: CartItem) {
+        val position = cartItems.indexOf(item)
+        if (position != -1) {
+            notifyItemChanged(position)
+        }
+    }
 }

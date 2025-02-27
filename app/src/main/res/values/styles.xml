@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="FoodCountStyle">
-        <item name="android:minWidth">15dp</item>
-        <item name="android:minHeight">15dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingVertical">0dp</item>
+        <item name="android:paddingHorizontal">10dp</item>
         <item name="layout_constraintTop_toTopOf">parent</item>
         <item name="layout_constraintBottom_toBottomOf">parent</item>
+        <item name="android:background">@color/transparent</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="OrderMCVStyle">
