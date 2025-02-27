@@ -174,7 +174,7 @@ class OrderActivity : AppCompatActivity() {
 
     private fun createCheck() {
         try {
-            var time = LocalDateTime.now()
+            val time = LocalDateTime.now()
 
             val byteArrayOutputStream = ByteArrayOutputStream()
             val writer = PdfWriter(byteArrayOutputStream)
@@ -191,16 +191,19 @@ class OrderActivity : AppCompatActivity() {
                 .setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
 
             topTable.addCell(Cell(1,2).add(Paragraph("ОБЩЕСТВО С ОГРАНИЧЕННОЙ\nОТВЕТСТВЕННОСТЬЮ \"ЕДОК\"").setFont(boldFont)
-                .setTextAlignment(TextAlignment.CENTER)).setBorder(Border.NO_BORDER))
+                .setTextAlignment(TextAlignment.CENTER).setMultipliedLeading(0.9f)).setBorder(Border.NO_BORDER))
 
-            topTable.addCell(Cell().add(Paragraph("ИНН").setFont(defaultFont)).setBorder(Border.NO_BORDER))
-            topTable.addCell(Cell().add(Paragraph("9705114405").setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+            topTable.addCell(Cell().add(Paragraph("ИНН").setFont(defaultFont).setMultipliedLeading(0.9f)
+                ).setBorder(Border.NO_BORDER).setPadding(0f).setMargin(0f))
+            topTable.addCell(Cell().add(Paragraph("9705114405").setFont(defaultFont).setMultipliedLeading(0.9f).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER).setPadding(0f).setMargin(0f))
 
-            topTable.addCell(Cell().add(Paragraph("Налогообложение").setFont(defaultFont)).setBorder(Border.NO_BORDER))
-            topTable.addCell(Cell().add(Paragraph("ОСН").setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+            topTable.addCell(Cell().add(Paragraph("Налогообложение").setFont(defaultFont)).setBorder(Border.NO_BORDER)
+                .setPadding(0f).setMargin(0f))
+            topTable.addCell(Cell().add(Paragraph("ОСН").setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                .setPadding(0f).setMargin(0f))
 
 
-            val middleTable = Table(UnitValue.createPercentArray(floatArrayOf(1f, 4f, 5f))).useAllAvailableWidth()
+            val middleTable = Table(UnitValue.createPercentArray(floatArrayOf(2f, 4f, 5f))).useAllAvailableWidth()
 
             middleTable.addCell(Cell().add(Paragraph("№").setFont(boldFont)).setBorder(Border.NO_BORDER))
             middleTable.addCell(Cell().add(Paragraph("Наименование").setFont(boldFont)).setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER))
@@ -215,68 +218,101 @@ class OrderActivity : AppCompatActivity() {
 
                 withContext(Dispatchers.Main) {
                     items.forEach { (cartItem, food, vat) ->
-                        middleTable.addCell(Cell().add(Paragraph("$counter.").setFont(defaultFont)).setBorder(Border.NO_BORDER))
-                        middleTable.addCell(Cell().add(Paragraph("${food.name}").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().add(Paragraph("$counter.").setFont(defaultFont)).setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
+                        middleTable.addCell(Cell().add(Paragraph("${food.name}").setFont(boldFont)).setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
                         middleTable.addCell(Cell().add(Paragraph("${food.price}₽ x ${cartItem.foodQuantity} = ${food.price * cartItem.foodQuantity}₽").setFont(defaultFont)
-                            .setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                            .setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
 
-                        middleTable.addCell(Cell().setBorder(Border.NO_BORDER))
-                        middleTable.addCell(Cell().add(Paragraph("В том числе НДС 20%").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
+                        middleTable.addCell(Cell().add(Paragraph("В том числе НДС 20%").setFont(defaultFont)).setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
                         middleTable.addCell(Cell().add(Paragraph("${String.format("%.2f", vat)}₽")
-                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
 
-                        middleTable.addCell(Cell().setBorder(Border.NO_BORDER))
-                        middleTable.addCell(Cell().add(Paragraph("Мера количества").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
+                        middleTable.addCell(Cell().add(Paragraph("Мера количества").setFont(defaultFont)).setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
                         middleTable.addCell(Cell().add(Paragraph("шт. или ед.")
-                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
 
-                        middleTable.addCell(Cell().setBorder(Border.NO_BORDER))
-                        middleTable.addCell(Cell().add(Paragraph("ИНН поставщика").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
+                        middleTable.addCell(Cell().add(Paragraph("ИНН поставщика").setFont(defaultFont)).setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
                         middleTable.addCell(Cell().add(Paragraph("${rest.inn}")
-                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
 
-                        middleTable.addCell(Cell().setBorder(Border.NO_BORDER))
-                        middleTable.addCell(Cell().add(Paragraph("Товар / полный расчет").setFont(defaultFont)).setBorder(Border.NO_BORDER))
+                        middleTable.addCell(Cell().setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
+                        middleTable.addCell(Cell().add(Paragraph("Товар / полный расчет").setFont(defaultFont)).setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
                         middleTable.addCell(Cell().add(Paragraph()
-                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                            .setPadding(0f).setMargin(0f))
 
                         counter++
                     }
                     val bottomTable = Table(UnitValue.createPercentArray(floatArrayOf(1f, 1f))).useAllAvailableWidth()
 
-                    bottomTable.addCell(Cell().add(Paragraph("Итого").setFont(boldFont)).setBorder(Border.NO_BORDER))
-                    bottomTable.addCell(Cell().add(Paragraph("${order.total}₽").setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("Итого").setFont(boldFont)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
+                    bottomTable.addCell(Cell().add(Paragraph("${order.total}₽").setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
 
-                    bottomTable.addCell(Cell().add(Paragraph("В том числе НДС 20%").setFont(defaultFont).setFontColor(ColorConstants.GRAY)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("В том числе НДС 20%").setFont(defaultFont).setFontColor(ColorConstants.GRAY)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
                     bottomTable.addCell(Cell().add(Paragraph("${String.format("%.2f" , order.total.toFloat() / 1.2 * 0.2)}₽")
-                        .setFont(defaultFont).setFontColor(ColorConstants.GRAY).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                        .setFont(defaultFont).setFontColor(ColorConstants.GRAY).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
 
-                    bottomTable.addCell(Cell().add(Paragraph("Сумма без НДС").setFont(defaultFont).setFontColor(ColorConstants.GRAY)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("Сумма без НДС").setFont(defaultFont).setFontColor(ColorConstants.GRAY)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
                     bottomTable.addCell(Cell().add(Paragraph("${String.format("%.2f", order.total.toFloat() - (order.total.toFloat() / 1.2 * 0.2))}₽")
-                        .setFont(defaultFont).setFontColor(ColorConstants.GRAY).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                        .setFont(defaultFont).setFontColor(ColorConstants.GRAY).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
 
-                    bottomTable.addCell(Cell().add(Paragraph("Безналичными").setFont(boldFont)).setBorder(Border.NO_BORDER))
-                    bottomTable.addCell(Cell().add(Paragraph("${order.total}₽").setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("Безналичными").setFont(boldFont)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
+                    bottomTable.addCell(Cell().add(Paragraph("${order.total}₽").setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
 
-                    bottomTable.addCell(Cell().add(Paragraph("Эл. адрес покупателя").setFont(boldFont)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("Эл. адрес покупателя").setFont(boldFont)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
                     bottomTable.addCell(Cell().add(Paragraph("${GlobalVM.currentUser!!.email}")
-                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
 
-                    bottomTable.addCell(Cell().add(Paragraph("Эл. адрес отправителя").setFont(boldFont)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("Эл. адрес отправителя").setFont(boldFont)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
                     bottomTable.addCell(Cell().add(Paragraph("no-reply@ofd.edok.ru")
-                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
 
-                    bottomTable.addCell(Cell().add(Paragraph("Адрес сайта ФНС").setFont(boldFont)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("Адрес сайта ФНС").setFont(boldFont)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
                     bottomTable.addCell(Cell().add(Paragraph("www.nalog.gov.ru")
-                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
 
-                    bottomTable.addCell(Cell().add(Paragraph("Название ОФД").setFont(boldFont)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("Название ОФД").setFont(boldFont)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
                     bottomTable.addCell(Cell().add(Paragraph("Едок.ОФД")
-                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
 
-                    bottomTable.addCell(Cell().add(Paragraph("ИНН ОФД").setFont(boldFont)).setBorder(Border.NO_BORDER))
+                    bottomTable.addCell(Cell().add(Paragraph("ИНН ОФД").setFont(boldFont)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
                     bottomTable.addCell(Cell().add(Paragraph("7704358518")
-                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
+                        .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER)
+                        .setPadding(0f).setMargin(0f))
 
                     document.add(topTable)
                     document.add(middleTable)
@@ -285,42 +321,7 @@ class OrderActivity : AppCompatActivity() {
 
                     openPdfFromByteArray(byteArrayOutputStream.toByteArray())
                 }
-//                cartItems.forEach {
-//                    val food = ApiClient.IFood.getById(it.foodId)!!
-//
-//
-//                        middleTable.addCell(Cell().add(Paragraph("$counter.").setFont(defaultFont)).setBorder(Border.NO_BORDER))
-//                        middleTable.addCell(Cell().add(Paragraph("${food.name}").setFont(defaultFont)).setBorder(Border.NO_BORDER))
-//                        middleTable.addCell(Cell().add(Paragraph("${food.price}₽ ⨯ ${it.foodQuantity} = ${food.price * it.foodQuantity}₽").setFont(defaultFont)
-//                            .setTextAlignment(TextAlignment.CENTER)).setBorder(Border.NO_BORDER))
-//
-//                        middleTable.addCell(Cell())
-//                        middleTable.addCell(Cell().add(Paragraph("В том числе НДС 20%").setFont(defaultFont)).setBorder(Border.NO_BORDER))
-//                        middleTable.addCell(Cell().add(Paragraph("${(food.price.toFloat() / 1.2 * 0.2)}₽")
-//                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
-//
-//                        middleTable.addCell(Cell())
-//                        middleTable.addCell(Cell().add(Paragraph("Мера количества").setFont(defaultFont)).setBorder(Border.NO_BORDER))
-//                        middleTable.addCell(Cell().add(Paragraph("${(food.price.toFloat() / 1.2 * 0.2)}₽")
-//                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
-//
-//                        middleTable.addCell(Cell())
-//                        middleTable.addCell(Cell().add(Paragraph("ИНН поставщика").setFont(defaultFont)).setBorder(Border.NO_BORDER))
-//                        middleTable.addCell(Cell().add(Paragraph("${rest.inn}")
-//                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
-//
-//                        middleTable.addCell(Cell())
-//                        middleTable.addCell(Cell().add(Paragraph("Товар / полный расчет").setFont(defaultFont)).setBorder(Border.NO_BORDER))
-//                        middleTable.addCell(Cell().add(Paragraph()
-//                            .setFont(defaultFont).setTextAlignment(TextAlignment.RIGHT)).setBorder(Border.NO_BORDER))
-//
-//                        counter++
-//
-//                }
             }
-
-
-
         } catch (e: Exception) {
             e.printStackTrace()
         }
