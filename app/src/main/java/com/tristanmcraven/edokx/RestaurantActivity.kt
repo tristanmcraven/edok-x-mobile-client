@@ -34,6 +34,7 @@ import kotlinx.coroutines.withContext
 class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
 
     private lateinit var textViewRestName: TextView
+    private lateinit var textViewOrderTotal: TextView
     private lateinit var containerCategories: ChipGroup
     private lateinit var recyclerViewFood: RecyclerView
 //    private lateinit var buttonOrder: Button
@@ -100,6 +101,7 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
     private fun initUI()
     {
         textViewRestName = findViewById(R.id.textViewRestName)
+        textViewOrderTotal = findViewById(R.id.textViewOrderTotal)
         containerCategories = findViewById(R.id.containerCategories)
         recyclerViewFood = findViewById(R.id.recyclerViewFood)
 //        buttonOrder = findViewById(R.id.buttonOrder)
@@ -175,6 +177,15 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
         recyclerViewFood.adapter = FoodAdapter(newFoodList.toMutableList(), this)
         val adapter = recyclerViewFood.adapter as FoodAdapter
         adapter.setFoodList(newFoodList)
+    }
+
+    fun updateTotal() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val total = ApiClient.ICart.getTotal(cart!!.id)
+            withContext(Dispatchers.Main) {
+                textViewOrderTotal.text = "$total ₽"
+            }
+        }
     }
 
 }

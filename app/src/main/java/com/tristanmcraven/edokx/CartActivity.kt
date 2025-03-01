@@ -19,13 +19,16 @@ import com.tristanmcraven.edokx.adapter.CartItemAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CartActivity : AppCompatActivity() {
 
     private lateinit var buttonGoBack: ImageButton
     private lateinit var textViewRestName: TextView
+    private lateinit var textViewOrderTotal: TextView
     private lateinit var cardViewNext: CardView
     private lateinit var recyclerViewCartItems: RecyclerView
+
 
     private lateinit var rest: Restaurant
     private lateinit var cartItems: List<CartItem>
@@ -60,6 +63,7 @@ class CartActivity : AppCompatActivity() {
         }
 
         textViewRestName = findViewById(R.id.textViewRestName)
+        textViewOrderTotal = findViewById(R.id.textViewOrderTotal)
         textViewRestName.text = rest.name
         recyclerViewCartItems = findViewById(R.id.recyclerViewCartItems)
     }
@@ -76,6 +80,7 @@ class CartActivity : AppCompatActivity() {
             onIncrease = {increaseQuantity(it)},
             onDecrease = {decreaseQuantity(it)})
         recyclerViewCartItems.adapter = adapter
+        updateTotal()
     }
 
     private fun increaseQuantity(item: CartItem) {
@@ -83,8 +88,9 @@ class CartActivity : AppCompatActivity() {
         adapter.updateItem(item)
 
         CoroutineScope(Dispatchers.IO).launch {
-            ApiClient.ICart.addItem(cartItems.first().cartId, item.id)
+            ApiClient.ICart.addItem(cartItems.first().cartId, item.foodId)
         }
+        updateTotal()
     }
 
     private fun decreaseQuantity(item: CartItem) {
@@ -95,7 +101,17 @@ class CartActivity : AppCompatActivity() {
             adapter.removeItem(item)
         }
         CoroutineScope(Dispatchers.IO).launch {
-            ApiClient.ICart.decreaseQuantity(cartItems.first().cartId, item.id)
+            ApiClient.ICart.decreaseQuantity(cartItems.first().cartId, item.foodId)
+        }
+        updateTotal()
+    }
+
+    fun updateTotal() {
+        CoroutineScope(Dispatchers.IO).launch {
+            val total = ApiClient.ICart.getTotal(cartItems.first().cartId)
+            withContext(Dispatchers.Main) {
+                textViewOrderTotal.text = "$total ₽"
+            }
         }
     }
 }

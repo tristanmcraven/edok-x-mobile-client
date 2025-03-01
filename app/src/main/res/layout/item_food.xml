@@ -60,6 +60,7 @@
                 app:layout_constraintTop_toBottomOf="@id/textViewPrice"/>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewBottomDefault"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="10dp"
@@ -85,6 +86,57 @@
                     app:layout_constraintBottom_toBottomOf="parent"/>
 
             </androidx.cardview.widget.CardView>
+
+<!--            <androidx.cardview.widget.CardView-->
+<!--                android:id="@+id/cardViewBottomAdvanced"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:cardElevation="0dp"-->
+<!--                app:cardCornerRadius="10dp"-->
+<!--                app:cardBackgroundColor="@color/transparent"-->
+
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent">-->
+
+<!--                <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content">-->
+
+<!--                    <Button-->
+<!--                        android:id="@+id/buttonIncreaseQuantity"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:text="–"-->
+
+<!--                        app:layout_constraintStart_toStartOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+<!--                    <TextView-->
+<!--                        android:id="@+id/textViewFoodCount"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:text="@string/zero"-->
+
+<!--                        app:layout_constraintStart_toEndOf="@id/buttonIncreaseQuantity"-->
+<!--                        app:layout_constraintTop_toTopOf="parent"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                        app:layout_constraintEnd_toStartOf="@id/buttonDecreaseQuantity"/>-->
+
+<!--                    <Button-->
+<!--                        android:id="@+id/buttonDecreaseQuantity"-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="match_parent"-->
+<!--                        android:text="+"-->
+
+<!--                        app:layout_constraintEnd_toEndOf="parent"-->
+<!--                        app:layout_constraintTop_toTopOf="parent"-->
+<!--                        app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+<!--                </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+<!--            </androidx.cardview.widget.CardView>-->
 
 
 <!--            <Button-->

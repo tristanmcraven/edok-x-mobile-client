@@ -42,4 +42,7 @@
     <string name="cart">Корзина</string>
     <string name="orders">Заказы</string>
     <string name="home">Главная</string>
+    <string name="zero">0</string>
+    <string name="textViewOrderTemplate">Заказ днём, в 12:45</string>
+    <string name="textViewOrderTimeAndRestTemplate">666 ₽, Restoran</string>
 </resources>

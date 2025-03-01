@@ -5,7 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.tristanmcraven.edok.utility.ApiClient
 import com.tristanmcraven.edokx.R
+import com.tristanmcraven.edokx.adapter.OrderHistoryAdapter
+import com.tristanmcraven.edokx.utility.GlobalVM
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +31,10 @@ class OrdersFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private lateinit var recyclerViewOrderHistory: RecyclerView
+
+    private lateinit var adapter: OrderHistoryAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -34,8 +47,20 @@ class OrdersFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val rootView = inflater.inflate(R.layout.fragment_orders, container, false)
+        recyclerViewOrderHistory = rootView.findViewById(R.id.recyclerViewOrderHistory)
+        recyclerViewOrderHistory.layoutManager = LinearLayoutManager(requireContext())
+        CoroutineScope(Dispatchers.IO).launch {
+            val orders = ApiClient.IUser.getOrders(GlobalVM.currentUser!!.id)!!
+            withContext(Dispatchers.Main) {
+                adapter = OrderHistoryAdapter(orders)
+                recyclerViewOrderHistory.adapter = adapter
+            }
+        }
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_orders, container, false)
+        return rootView
     }
 
     companion object {

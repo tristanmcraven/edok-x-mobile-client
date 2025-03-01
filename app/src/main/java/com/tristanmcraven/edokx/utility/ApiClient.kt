@@ -104,6 +104,11 @@ object ApiClient {
             )
             return sendRequest("user/register", "POST", User::class.java, dto)
         }
+
+        fun getOrders(userId: UInt): List<Order>? {
+            val type = object  : TypeToken<List<Order>>() {}.type
+            return sendRequest("user/$userId/orders", "GET", type)
+        }
     }
 
     object IRestaurant

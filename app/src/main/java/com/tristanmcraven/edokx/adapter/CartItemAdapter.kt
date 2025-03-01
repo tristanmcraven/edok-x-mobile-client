@@ -46,6 +46,7 @@ class CartItemAdapter(
             food = ApiClient.IFood.getById(item.foodId)!!
             withContext(Dispatchers.Main) {
                 holder.textViewFoodName.text = food.name
+
                 holder.textViewFoodPrice.text = "${food.price} ₽"
                 val rawImage = (Base64.decode(food.photo, Base64.DEFAULT))
                 holder.imgViewFood.setImageBitmap(BitmapFactory.decodeByteArray(rawImage, 0, rawImage.size))
