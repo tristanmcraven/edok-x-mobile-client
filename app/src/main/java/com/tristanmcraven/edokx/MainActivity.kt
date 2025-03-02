@@ -12,7 +12,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import com.tristanmcraven.edok.utility.ApiClient
 import com.tristanmcraven.edokx.databinding.ActivityMainBinding
+import com.tristanmcraven.edokx.utility.GlobalVM
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : AppCompatActivity() {
 
@@ -48,6 +54,13 @@ class MainActivity : AppCompatActivity() {
         val textViewUserEmail = headerView.findViewById<TextView>(R.id.textViewUserEmail)
         textViewUserFullname.text = userName
         textViewUserEmail.text = userEmail
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val carts = ApiClient.IUser.getCarts(GlobalVM.currentUser!!.id)
+            withContext(Dispatchers.Main) {
+                GlobalVM.carts = carts
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

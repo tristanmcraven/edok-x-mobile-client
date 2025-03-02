@@ -64,6 +64,9 @@ class CheckoutActivity : AppCompatActivity() {
                 if (result != null) {
                     withContext(Dispatchers.Main) {
                         val intent = Intent(this@CheckoutActivity, OrderActivity::class.java)
+                            .apply {
+                                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
                         intent.putExtra("orderNumber", result.id.toInt())
                         startActivity(intent)
                         finish()

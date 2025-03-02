@@ -33,6 +33,7 @@ class CartActivity : AppCompatActivity() {
     private lateinit var rest: Restaurant
     private lateinit var cartItems: List<CartItem>
     private lateinit var adapter: CartItemAdapter
+    private var cartId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,15 +73,21 @@ class CartActivity : AppCompatActivity() {
     {
         rest = intent.getParcelableExtra<Restaurant>("rest")!!
         cartItems = intent.getParcelableArrayListExtra<CartItem>("cartItems")?.toList()!!
+        cartId = intent.getIntExtra("cartId", 0)
     }
 
     private fun setupRecyclerView() {
-        recyclerViewCartItems.layoutManager = LinearLayoutManager(this)
-        adapter = CartItemAdapter(cartItems.toMutableList(),
-            onIncrease = {increaseQuantity(it)},
-            onDecrease = {decreaseQuantity(it)})
-        recyclerViewCartItems.adapter = adapter
-        updateTotal()
+        CoroutineScope(Dispatchers.IO).launch {
+            cartItems = ApiClient.ICart.getItemsByCartId(cartId.toUInt())!!
+            withContext(Dispatchers.Main) {
+                recyclerViewCartItems.layoutManager = LinearLayoutManager(this@CartActivity)
+                adapter = CartItemAdapter(cartItems.toMutableList(),
+                    onIncrease = {increaseQuantity(it)},
+                    onDecrease = {decreaseQuantity(it)})
+                recyclerViewCartItems.adapter = adapter
+                updateTotal()
+            }
+        }
     }
 
     private fun increaseQuantity(item: CartItem) {

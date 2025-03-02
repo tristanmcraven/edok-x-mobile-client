@@ -59,7 +59,7 @@ class HomeFragment : Fragment() {
                 val restCategories = ApiClient.IRestaurant.getCategoriesById(rest.id)!!
                 val rawImage = Base64.decode(rest.image, Base64.DEFAULT)
                 val categoryNames = restCategories.map { cat ->
-                    ApiClient.ICategory.getCategoryById(cat.id)!!.name
+                    ApiClient.ICategory.getCategoryById(cat.categoryId)!!.name
                 }
 
                 restaurantView.setOnClickListener {

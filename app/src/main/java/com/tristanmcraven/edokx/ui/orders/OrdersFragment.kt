@@ -52,7 +52,9 @@ class OrdersFragment : Fragment() {
         recyclerViewOrderHistory = rootView.findViewById(R.id.recyclerViewOrderHistory)
         recyclerViewOrderHistory.layoutManager = LinearLayoutManager(requireContext())
         CoroutineScope(Dispatchers.IO).launch {
-            val orders = ApiClient.IUser.getOrders(GlobalVM.currentUser!!.id)!!
+            val orders = ApiClient.IUser.getOrders(GlobalVM.currentUser!!.id)!!.sortedByDescending {
+                it.id
+            }
             withContext(Dispatchers.Main) {
                 adapter = OrderHistoryAdapter(orders)
                 recyclerViewOrderHistory.adapter = adapter

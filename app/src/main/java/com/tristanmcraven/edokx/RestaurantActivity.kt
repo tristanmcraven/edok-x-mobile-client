@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
@@ -65,7 +66,9 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
         textViewRestName.text = rest.name
 
         CoroutineScope(Dispatchers.IO).launch {
-            cart = GlobalVM.carts!!.filter { it.restaurantId == rest.id }.firstOrNull()
+            if (!GlobalVM.carts.isNullOrEmpty()) {
+                cart = GlobalVM.carts!!.filter { it.restaurantId == rest.id }.firstOrNull()
+            }
             if (cart == null) {
                 cart = ApiClient.IUser.getActiveCartByRestId(GlobalVM.currentUser!!.id, rest.id)
             }
@@ -85,16 +88,18 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
                 val zxc = containerCategories.children.first() as Chip
                 zxc.performClick()
             }
+
+            updateCartTotal()
         }
 
     }
 
     override fun onFoodAdded(food: Food) {
         CoroutineScope(Dispatchers.IO).launch {
-            val cart = GlobalVM.carts!!.first { it.restaurantId == food.restaurantId }
-            ApiClient.ICart.addItem(cart.id, food.id)
+            ApiClient.ICart.addItem(cart!!.id, food.id)
 
-            cartItems = ApiClient.ICart.getItemsByCartId(cart.id)
+            cartItems = ApiClient.ICart.getItemsByCartId(cart!!.id)
+            updateCartTotal()
         }
     }
 
@@ -111,9 +116,14 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
         containerCategories.isSelectionRequired = true
 
         cardViewOrder.setOnClickListener {
+            if (cartItems!!.isEmpty()) {
+                Toast.makeText(this, "Корзина пуста", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             val intent = Intent(this, CartActivity::class.java)
             intent.putParcelableArrayListExtra("cartItems", ArrayList(cartItems))
             intent.putExtra("rest", rest)
+            intent.putExtra("cartId", cart!!.id.toInt())
             startActivity(intent)
         }
 
@@ -121,6 +131,18 @@ class RestaurantActivity : AppCompatActivity(), OnFoodAddedListener {
         buttonGoBack.setOnClickListener {
             onBackPressed()
         }
+    }
+
+    private fun updateCartTotal() {
+        if (cartItems!!.isNotEmpty()) {
+            CoroutineScope(Dispatchers.IO).launch {
+                val total = ApiClient.ICart.getTotal(cartItems!!.first().cartId)
+                withContext(Dispatchers.Main) {
+                    textViewOrderTotal.text = "$total ₽"
+                }
+            }
+        }
+        else textViewOrderTotal.text = "0 ₽"
     }
 
     private fun addCategoryChip(categoryName: String, categoryId: UInt) {
